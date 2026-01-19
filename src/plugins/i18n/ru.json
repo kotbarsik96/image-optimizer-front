@@ -1,6 +1,10 @@
 {
   "general": {
-    "dropdownPlaceholder": "Выберите значение"
+    "dropdownPlaceholder": "Выберите значение",
+    "project": "Проект",
+    "toHomepage": "На главную",
+    "optimize": "Оптимизировать",
+    "optimizedImages": "Оптимизированные изображения"
   },
   "home": {
     "upload": "Загрузить",

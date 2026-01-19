@@ -9,16 +9,16 @@
 <script setup lang="ts">
 import { useButtonClass } from '@/composables/useButtonClass'
 import type { ButtonStyle, ButtonTypeAttribute } from '@/interfaces/UI/Button'
-import type { RouteLocation } from 'vue-router'
+import type { RouteLocationAsPathGeneric, RouteLocationAsRelativeGeneric } from 'vue-router'
 
 const props = withDefaults(
   defineProps<{
-    buttonStyle: ButtonStyle
+    buttonStyle?: ButtonStyle
     disabled?: boolean
     iconOnly?: boolean
     isLoading?: boolean
-    type: ButtonTypeAttribute
-    to: RouteLocation
+    type?: ButtonTypeAttribute
+    to: RouteLocationAsPathGeneric | RouteLocationAsRelativeGeneric
   }>(),
   {
     buttonStyle: 'primary',

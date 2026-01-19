@@ -41,6 +41,21 @@ button {
   padding-inline: var(--container-padding-inline);
 }
 
+._page-title {
+  display: flex;
+  justify-content: center;
+
+  h1 {
+    background-color: var(--gray-50);
+    border-radius: var(--ui-border-radius);
+    box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.1);
+    display: inline-flex;
+    padding-block: 1rem;
+    padding-inline: 2.5rem;
+    text-align: center;
+  }
+}
+
 @for $i from 1 through 4 {
   ._h#{$i} {
     font: var(--text-h#{$i});
