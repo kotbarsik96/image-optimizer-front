@@ -1,0 +1,19 @@
+@use '~/css/components/TextInputWrapper.scss';
+
+.ti-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  .label {
+    display: inline-block;
+  }
+
+  .error {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    color: var(--error);
+    font: var(--text-regular-16);
+  }
+}

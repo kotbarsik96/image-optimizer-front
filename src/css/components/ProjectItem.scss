@@ -1,0 +1,31 @@
+@use '@/css/mixins/mixins.scss';
+
+.project-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  background-color: var(--gray-100);
+  border: 1px solid var(--gray-300);
+  padding: 0.75rem 1.875rem;
+  color: var(--secondary);
+  font: var(--text-medium-21);
+  border-radius: var(--ui-border-radius);
+  box-shadow: var(--shadow);
+  transition: var(--general-transition);
+
+  .name {
+    padding-block-start: 0.2rem;
+  }
+
+  svg {
+    width: 2rem;
+    height: auto;
+    aspect-ratio: 1;
+  }
+
+  &:hover {
+    box-shadow: var(--shadow-2);
+    background-color: var(--primary-1);
+    border-color: var(--primary);
+  }
+}

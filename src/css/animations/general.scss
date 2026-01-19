@@ -1,0 +1,35 @@
+.anim-dropdown {
+  &-enter-active,
+  &-leave-active {
+    transition: var(--general-transition);
+  }
+
+  &-enter-from,
+  &-leave-to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  &-enter-to,
+  &-leave-from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.anim-fade {
+  &-enter-active,
+  &-leave-active {
+    transition: var(--general-transition);
+  }
+
+  &-enter-from,
+  &-leave-to {
+    opacity: 0;
+  }
+
+  &-enter-to,
+  &-leave-from {
+    opacity: 1;
+  }
+}

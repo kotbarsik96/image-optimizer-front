@@ -1,0 +1,76 @@
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--ui-border-radius);
+  color: var(--gray-50);
+  box-shadow: var(--shadow);
+  text-align: center;
+  background-color: var(--primary);
+  transition: var(--general-transition);
+
+  > span {
+    flex: 1 1 auto;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  svg {
+    flex-shrink: 0;
+    width: 1.5rem;
+    height: auto;
+    aspect-ratio: 1;
+    display: inline-block;
+    margin-block-end: 0.625rem;
+    transition: var(--general-transition);
+  }
+
+  .btn-loader {
+    position: absolute;
+    right: 0;
+    width: 1.25rem;
+    height: auto;
+    aspect-ratio: 1;
+  }
+
+  &:hover {
+    border-radius: var(--ui-border-radius-reverse);
+    box-shadow: var(--shadow-2);
+    background-color: var(--primary-2);
+  }
+
+  &.--secondary {
+    background-color: var(--secondary);
+
+    &:hover {
+      background-color: var(--secondary-2);
+    }
+  }
+
+  &.--warning {
+    background-color: var(--warning);
+
+    &:hover {
+      background-color: var(--warning-2);
+    }
+  }
+
+  &.--success {
+    background-color: var(--success);
+
+    &:hover {
+      background-color: var(--success-2);
+    }
+  }
+
+  &.--error {
+    background-color: var(--error);
+
+    &:hover {
+      background-color: var(--error-2);
+    }
+  }
+}

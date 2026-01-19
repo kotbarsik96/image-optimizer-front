@@ -1,0 +1,185 @@
+@use '@/css/mixins/mixins.scss';
+
+body {
+  height: 100%;
+  font-family: var(--font-roboto);
+  font-style: normal;
+  font-weight: 400;
+  font-size: clamp(0.875em, 0.5svw + 0.6em, 1.15em);
+  font-stretch: 100%;
+  line-height: 130%;
+  scroll-behavior: auto;
+  // letter-spacing: 0.5px;
+  -webkit-overflow-scrolling: auto;
+  overflow: visible;
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+._no-scroll {
+  overflow: hidden;
+}
+
+/** Safari не даёт выставить overflow: hidden на body, поэтому приходится использовать другие стили для выключения скролла */
+body._no-scroll,
+body._scroll-element._no-scroll {
+  position: fixed;
+  inset: 0;
+  touch-action: none;
+}
+
+a,
+button {
+  &:focus-visible {
+    outline: 1px solid;
+  }
+}
+
+._container {
+  max-width: var(--container-max-width);
+  margin-inline: auto;
+  padding-inline: var(--container-padding-inline);
+}
+
+@for $i from 1 through 4 {
+  ._h#{$i} {
+    font: var(--text-h#{$i});
+  }
+}
+
+._relative {
+  position: relative;
+}
+
+._page-paddings-block {
+  padding-block: clamp(0.625rem, 10svw, 1.25rem) 6.25rem;
+}
+
+._framed-img {
+  position: relative;
+  border-radius: 50%;
+  width: 150px;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &::before {
+    content: '';
+    background: url('~/assets/icons/img-frame.svg') center/contain no-repeat;
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+  }
+
+  .cbi-picture,
+  picture,
+  img {
+    position: relative;
+    display: inline-block;
+    border-radius: 50%;
+    width: 136px;
+    aspect-ratio: 1;
+    height: auto;
+    z-index: 1;
+  }
+
+  .cbi-picture {
+    top: 0.15rem;
+  }
+}
+
+// Font-Weight
+$fontWeights: 400, 500, 600, 700, 800;
+@each $weight in $fontWeights {
+  ._fw-#{$weight} {
+    font-weight: $weight;
+  }
+}
+
+// FLEXBOX
+._flex {
+  display: flex;
+}
+
+._flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+._flex-wrap {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+$flexAlignItems: flex-start, center, flex-end, stretch;
+@each $item in $flexAlignItems {
+  ._items-#{$item} {
+    align-items: $item;
+  }
+}
+
+$flexJustifyContent: flex-start, center, flex-end, space-between, space-around, space-evenly;
+@each $item in $flexAlignItems {
+  ._justify-#{$item} {
+    justify-content: $item;
+  }
+}
+
+$gaps: 5, 10, 15, 20;
+@each $item in $gaps {
+  ._row-gap-#{$item} {
+    row-gap: calc(#{$item} / 16 * 1em);
+  }
+  ._column-gap-#{$item} {
+    column-gap: calc(#{$item} / 16 * 1em);
+  }
+  ._gap-#{$item} {
+    gap: calc(#{$item} / 16 * 1em);
+  }
+}
+
+$margins: 0, 2, 4, 6, 8, 10;
+@each $margin in $margins {
+  ._mt-#{$margin} {
+    margin-block-start: calc(#{$margin} / 4 * 1em);
+  }
+
+  ._mb-#{$margin} {
+    margin-block-end: calc(#{$margin} / 4 * 1em);
+  }
+
+  ._mr-#{$margin} {
+    margin-inline-end: calc(#{$margin} / 4 * 1em);
+  }
+
+  ._ml-#{$margin} {
+    margin-inline-start: calc(#{$margin} / 4 * 1em);
+  }
+
+  ._mx-#{$margin} {
+    margin-inline: calc(#{$margin} / 4 * 1em);
+  }
+
+  ._my-#{$margin} {
+    margin-block: calc(#{$margin} / 4 * 1em);
+  }
+}
+
+$grayColors: 50, 100, 200, 300, 400, 500, 600, 700, 800, 900;
+@each $item in $grayColors {
+  ._text-gray-#{$item} {
+    color: var(--gray-#{$item});
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::after,
+  *::before {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0s !important; // если поставить 0.1ms, будут дергаться скроллбары при наведении
+    scroll-behavior: auto !important;
+  }
+}

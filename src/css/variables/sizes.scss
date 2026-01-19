@@ -1,0 +1,11 @@
+:root {
+  --b-radius-sm: 4px;
+  --b-radius-big: 12px;
+
+  --ui-border-radius: var(--b-radius-big) var(--b-radius-sm) var(--b-radius-big) var(--b-radius-sm);
+  --ui-border-radius-reverse: var(--b-radius-sm) var(--b-radius-big) var(--b-radius-sm)
+    var(--b-radius-big);
+
+  --container-max-width: 1200px;
+  --container-padding-inline: 20px;
+}

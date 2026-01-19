@@ -1,0 +1,105 @@
+@use '@/css/mixins/animation-styles.scss';
+
+.dropdown {
+  --b-radius: var(--b-radius-sm);
+  --bg-color-default: var(--gray-25);
+  --bg-color-hover: var(--gray-200);
+  --bg-color-selected: var(--primary-1);
+  --text-color-default: var(--gray-600);
+  --text-color-selected: var(--gray-25);
+  --border-color-default: var(--gray-600);
+
+  font: var(--text-regular-16);
+  position: relative;
+
+  .summary {
+    padding: 0.25rem 1rem;
+    border-radius: var(--b-radius);
+    background-color: var(--gray-);
+    color: var(--text-color-default);
+    border: 1px solid var(--border-color-default);
+    box-shadow: var(--shadow);
+    transition: var(--general-transition);
+
+    &:hover {
+      background-color: var(--bg-color-hover);
+    }
+  }
+
+  .chevron {
+    color: var(--text-color-default);
+    flex-shrink: 0;
+    transition: var(--general-transition);
+  }
+
+  .menu {
+    border-left: 1px solid var(--border-color-default);
+    border-right: 1px solid var(--border-color-default);
+    border-bottom: 1px solid var(--border-color-default);
+    border-radius: 0px 0px var(--b-radius) var(--b-radius);
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    animation: hide 0.25s ease-in-out;
+    @include animation-styles.hidden;
+  }
+
+  .item {
+    border-bottom: 1px solid var(--border-color-default);
+    color: var(--text-color-default);
+    transition: var(--general-transition);
+
+    &:hover {
+      background-color: var(--bg-color-hover);
+    }
+  }
+
+  .icon {
+    color: inherit;
+    width: 1.25rem;
+    height: auto;
+    aspect-ratio: 1;
+    transition: var(--general-transition);
+  }
+
+  &.--shown {
+    .chevron {
+      transform: rotate(180deg);
+    }
+
+    .summary {
+      border-bottom-left-radius: 0px;
+      border-bottom-right-radius: 0px;
+    }
+
+    .menu {
+      animation-name: show;
+      @include animation-styles.shown;
+    }
+
+    .item,
+    .item:hover {
+      background-color: var(--bg-color-selected);
+      color: var(--text-color-selected);
+    }
+  }
+}
+
+@keyframes hide {
+  0% {
+    @include animation-styles.shown;
+  }
+  100% {
+    @include animation-styles.hidden;
+  }
+}
+
+@keyframes show {
+  0% {
+    @include animation-styles.hidden;
+  }
+  100% {
+    @include animation-styles.shown;
+  }
+}

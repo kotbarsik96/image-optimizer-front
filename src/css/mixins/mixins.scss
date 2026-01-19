@@ -1,0 +1,89 @@
+@use 'sass:map';
+
+@mixin adaptive($size) {
+  @if $size == phone-small-min {
+    @media screen and (min-width: 23rem) {
+      // 360px
+      @content;
+    }
+  }
+  @if $size == phone-min {
+    @media screen and (min-width: 30rem) {
+      // 480px
+      @content;
+    }
+  } @else if $size == phone-big-min {
+    @media screen and (min-width: 39rem) {
+      // 620px
+      @content;
+    }
+  } @else if $size == tablet-small-min {
+    @media screen and (min-width: 48rem) {
+      // 770px
+      @content;
+    }
+  } @else if $size == tablet-big-min {
+    @media screen and (min-width: 62rem) {
+      // 992px
+      @content;
+    }
+  } @else if $size == desktop-small-min {
+    @media screen and (min-width: 75rem) {
+      // 1200px
+      @content;
+    }
+  } @else if $size == desktop-mid-min {
+    @media screen and (min-width: 88rem) {
+      // 1400px
+      @content;
+    }
+  } @else if $size == desktop-mid-min-2 {
+    @media screen and (min-width: 100rem) {
+      @content;
+    }
+  }
+  // учитывает мобилки шириной до 620px + смену ориентации таких мобилок
+  @else if $size == phone-and-rotation {
+    @media screen and (orientation: landscape) and (max-height: 620px) and (max-width: 992px),
+      screen and (orientation: portrait) and (max-width: 620px) {
+      @content;
+    }
+  }
+}
+
+@mixin textStroke($width, $color) {
+  text-shadow:
+    1px 1px $width $color,
+    -1px 1px $width $color,
+    1px -1px $width $color,
+    -1px -1px $width $color;
+}
+
+@mixin noScrollbar($noPaddingRight: true, $noMarginBottom: true) {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  &,
+  &:hover {
+    @if ($noPaddingRight) {
+      padding-right: 0;
+    }
+    @if ($noMarginBottom) {
+      margin-bottom: 0;
+    }
+  }
+}
+
+@mixin maxLines($count) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -moz-box;
+  -moz-box-orient: vertical;
+  display: -webkit-box;
+  -webkit-line-clamp: $count;
+  -webkit-box-orient: vertical;
+  line-clamp: $count;
+}

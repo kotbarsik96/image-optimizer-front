@@ -1,0 +1,17 @@
+@mixin hidden {
+  display: none;
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+@mixin shown {
+  display: block;
+  opacity: 1;
+  transform: translateY(0px);
+}
+
+@mixin shown-flex {
+  display: flex;
+  opacity: 1;
+  transform: translateY(0px);
+}

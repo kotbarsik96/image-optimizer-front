@@ -1,0 +1,44 @@
+// RobotoFlex
+@font-face {
+  font-family: 'RobotoFlex';
+  font-style: normal;
+  font-weight: 100 900;
+  font-stretch: 25% 100%;
+  font-display: swap;
+  src:
+    url('@/assets/fonts/RobotoFlex/RobotoFlex-BasicLatin.woff2') format('woff2-variations'),
+    url('@/assets/fonts/RobotoFlex/RobotoFlex-BasicLatin.woff') format('woff-variations'),
+    url('@/assets/fonts/RobotoFlex/RobotoFlex-BasicLatin.ttf') format('truetype-variations');
+  unicode-range: U+0000-007F;
+}
+
+@font-face {
+  font-family: 'RobotoFlex';
+  font-style: normal;
+  font-weight: 100 900;
+  font-stretch: 25% 100%;
+  font-display: swap;
+  src:
+    url('@/assets/fonts/RobotoFlex/RobotoFlex-Cyrillic.woff2') format('woff2-variations'),
+    url('@/assets/fonts/RobotoFlex/RobotoFlex-Cyrillic.woff') format('woff-variations'),
+    url('@/assets/fonts/RobotoFlex/RobotoFlex-Cyrillic.ttf') format('truetype-variations');
+  unicode-range: U+0401-0451;
+}
+
+// RobotoFlex Fallback: Helvetica 400
+@font-face {
+  font-family: 'RobotoFlex Fallback: Helvetica';
+  src: local('Helvetica');
+  ascent-override: 93%;
+  descent-override: 30%;
+  size-adjust: 105.5%;
+}
+
+// RobotoFlex Fallback: Arial
+@font-face {
+  font-family: 'RobotoFlex Fallback: Arial';
+  src: local('Arial'), local('ArialMT');
+  ascent-override: 93%;
+  descent-override: 30%;
+  size-adjust: 105.7%;
+}

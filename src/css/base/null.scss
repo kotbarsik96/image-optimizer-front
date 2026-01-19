@@ -1,0 +1,209 @@
+@use '@/css/mixins/mixins.scss';
+
+/* Указываем box sizing */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+/* Убираем внешние отступы */
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+ul[class],
+ol[class],
+li,
+figure,
+figcaption,
+blockquote,
+dl,
+dd {
+  margin: 0;
+  padding: 0;
+}
+/* Выставляем основные настройки по-умолчанию для body */
+body {
+  scroll-behavior: smooth;
+  text-rendering: optimizeSpeed;
+}
+
+/* Удаляем стандартную стилизацию для всех ul и il, у которых есть атрибут class*/
+ul[class],
+ol[class] {
+  list-style: none;
+}
+
+/* Элементы a, у которых нет класса, сбрасываем до дефолтных стилей */
+a:not([class]) {
+  text-decoration-skip-ink: auto;
+}
+
+/* Упрощаем работу с изображениями */
+img {
+  display: block;
+}
+
+/* Указываем понятную периодичность в потоке данных у article*/
+article > * + * {
+  margin-top: 1em;
+}
+
+/* Наследуем шрифты для инпутов и кнопок */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+input,
+button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  &:active {
+    outline: none !important;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+input {
+  outline: none;
+  border: none;
+}
+button,
+a {
+  padding: 0;
+  margin: 0;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+iframe {
+  border: none;
+}
+svg,
+img {
+  max-width: 100%;
+}
+a {
+  text-decoration: none;
+  color: inherit;
+  &:active {
+    outline: none !important;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+/*
+ * Reset default form styling for browser consistency
+ */
+[type='color'],
+[type='date'],
+[type='datetime'],
+[type='datetime-local'],
+[type='email'],
+[type='month'],
+[type='number'],
+[type='password'],
+[type='search'],
+[type='tel'],
+[type='text'],
+[type='time'],
+[type='url'],
+[type='week'],
+textarea,
+select {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  border-radius: 0;
+  box-shadow: none;
+  max-width: 100%;
+
+  &:focus {
+    box-shadow: none;
+    outline: 0;
+  }
+}
+
+button {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  border: 0;
+  border-radius: 0;
+  background: unset;
+  padding: 0;
+  line-height: 1;
+  cursor: pointer;
+}
+
+textarea {
+  resize: none;
+  width: 100%;
+}
+
+input:disabled,
+input[readonly],
+select:disabled,
+textarea:disabled,
+textarea[readonly] {
+  cursor: default;
+}
+
+[type='checkbox'],
+[type='file'],
+[type='radio'] {
+  margin: 0 0 1rem;
+}
+
+[type='checkbox'],
+[type='radio'] {
+  display: inline-block;
+  margin-right: 5px;
+  vertical-align: baseline;
+}
+[type='checkbox'] + label,
+[type='radio'] + label {
+  display: inline-block;
+  margin: 0;
+  vertical-align: middle;
+}
+
+[type='file'] {
+  width: 100%;
+}
+
+fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+legend {
+  margin-bottom: 0;
+  max-width: 100%;
+}
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+}
+ul li {
+  list-style: none;
+}
+
+menu {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}

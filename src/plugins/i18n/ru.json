@@ -1,0 +1,9 @@
+{
+  "general": {
+    "dropdownPlaceholder": "Выберите значение"
+  },
+  "home": {
+    "upload": "Загрузить",
+    "prevOptimizations": "Предыдущие оптимизации"
+  }
+}
