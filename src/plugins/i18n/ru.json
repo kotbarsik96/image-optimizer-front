@@ -4,10 +4,15 @@
     "project": "Проект",
     "toHomepage": "На главную",
     "optimize": "Оптимизировать",
-    "optimizedImages": "Оптимизированные изображения"
+    "optimizedImages": "Оптимизированные изображения",
+    "save": "Сохранить",
+    "cancel": "Отмена"
   },
   "home": {
     "upload": "Загрузить",
     "prevOptimizations": "Предыдущие оптимизации"
+  },
+  "project": {
+    "changeName": "Изменить название"
   }
 }

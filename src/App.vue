@@ -4,7 +4,11 @@
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useBodyScrollLocker } from '@/composables/BodyScrollLocker/useBodyScrollLock'
+
+useBodyScrollLocker()
+</script>
 
 <style>
 @import '@/css/variables/colors.scss';

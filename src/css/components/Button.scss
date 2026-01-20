@@ -7,7 +7,7 @@
   box-shadow: var(--shadow);
   text-align: center;
   background-color: var(--primary);
-  padding: 0.25rem 0.625rem;
+  padding: 0.75rem 0.625rem;
   transition: var(--general-transition);
 
   > span {
@@ -21,7 +21,7 @@
 
   :deep(svg) {
     flex-shrink: 0;
-    width: 1.5rem;
+    width: 1.25rem;
     height: auto;
     aspect-ratio: 1;
     display: inline-block;

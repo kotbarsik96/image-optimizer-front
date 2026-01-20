@@ -1,0 +1,71 @@
+@use '@/css/mixins/mixins.scss';
+
+dialog {
+  padding: 0;
+  border-width: 0;
+  outline: none;
+  opacity: 0;
+  transform: scale(0.5);
+  pointer-events: none;
+  animation: dialogHide 0.15s ease-out;
+  position: fixed;
+  inset: 0;
+
+  &:has(.close-wrapper)[open] {
+    flex-direction: row;
+  }
+
+  &::backdrop {
+    background-color: rgba(0, 0, 0, 0);
+  }
+
+  &[open] {
+    display: flex;
+    flex-direction: column;
+    pointer-events: all;
+    opacity: 1;
+    transform: scale(1);
+    animation: dialogOpen 0.15s ease-out;
+
+    &::backdrop {
+      background-color: rgba(0, 0, 0, 0.25);
+    }
+  }
+
+  @keyframes dialogOpen {
+    0% {
+      opacity: 0;
+      transform: scale(0.5);
+      display: none;
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+      display: flex;
+    }
+  }
+  @keyframes dialogHide {
+    0% {
+      opacity: 1;
+      transform: scale(1);
+      display: flex;
+    }
+    100% {
+      opacity: 0;
+      transform: scale(0.5);
+      display: none;
+    }
+  }
+
+  @include mixins.adaptive(tablet-big) {
+    &:has(.close-wrapper)[open] {
+      flex-direction: column-reverse;
+    }
+
+    .close-wrapper {
+      align-self: flex-end;
+      margin-left: 0;
+      margin-bottom: 0.625rem;
+    }
+  }
+}

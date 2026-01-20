@@ -7,7 +7,7 @@
 <script setup lang="ts">
 const props = withDefaults(
   defineProps<{
-    type: 'text' | 'email'
+    type?: 'text' | 'email'
   }>(),
   {
     type: 'text',
