@@ -1,15 +1,29 @@
 <template>
   <div class="load-area">
-    <button class="la-button" type="button">
+    <label class="la-button">
       <IconUpload />
       {{ $t('home.upload') }}
-    </button>
-    <input class="la-input" type="file" />
+      <input
+        class="la-input"
+        type="file"
+        ref="inputElement"
+        multiple
+        webkitdirectory
+        @change="onChange"
+      />
+    </label>
   </div>
 </template>
 
 <script setup lang="ts">
 import IconUpload from '@/assets/icons/upload.svg'
+import { useTemplateRef } from 'vue'
+
+const inputElement = useTemplateRef<HTMLInputElement>('inputElement')
+
+function onChange(event: any) {
+  console.log(inputElement.value?.files)
+}
 </script>
 
 <style lang="scss" scoped>
@@ -21,6 +35,7 @@ import IconUpload from '@/assets/icons/upload.svg'
   aspect-ratio: 1;
 
   .la-button {
+    cursor: pointer;
     border-radius: 8px;
     background-color: var(--gray-100);
     border: 2px solid var(--gray-400);
@@ -53,6 +68,7 @@ import IconUpload from '@/assets/icons/upload.svg'
   .la-input {
     opacity: 0;
     visibility: hidden;
+    position: absolute;
     z-index: -999;
   }
 }
