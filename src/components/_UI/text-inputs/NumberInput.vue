@@ -1,15 +1,13 @@
 <template>
-  <div class="t-input">
-    <input
-      inputmode="numeric"
-      type="text"
-      :value="shownValue"
-      @focus="onFocus"
-      @blur="onBlur"
-      @input="onInteraction"
-      @change="onInteraction"
-    />
-  </div>
+  <input
+    inputmode="numeric"
+    type="text"
+    :value="shownValue"
+    @focus="onFocus"
+    @blur="onBlur"
+    @input="onInteraction"
+    @change="onInteraction"
+  />
 </template>
 
 <script lang="ts" setup>

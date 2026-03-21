@@ -1,6 +1,6 @@
 import type { TRequestMethod } from '@/api/interfaces/TRequestMethod'
 
-export interface IQueryOptions {
+export interface IQueryOptions extends Omit<RequestInit, 'body'> {
   baseUrl?: string
 
   method: TRequestMethod

@@ -1,7 +1,5 @@
 <template>
-  <div class="t-input">
-    <input :type="type" v-model="model" />
-  </div>
+  <input :type="type" v-model="model" />
 </template>
 
 <script setup lang="ts">

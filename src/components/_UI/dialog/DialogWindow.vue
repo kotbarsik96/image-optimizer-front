@@ -64,15 +64,24 @@ const { closeDialog, closeDialogOnOuterClick } = useDialog(model, dialogEl)
   }
 
   .dw-close {
-    width: max(24px, 1.5rem);
-    height: auto;
-    aspect-ratio: 1;
+    cursor: pointer;
+    pointer-events: all;
+    z-index: 50;
     color: var(--text);
+    border-radius: 0;
+    position: absolute;
+    right: 0.625rem;
+    top: 0.625rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-inline-start: auto;
     transition: var(--general-transition);
+
+    svg {
+      width: max(24px, 1.5rem);
+      height: auto;
+      aspect-ratio: 1;
+    }
 
     &:hover {
       color: var(--primary-2);
@@ -80,6 +89,7 @@ const { closeDialog, closeDialogOnOuterClick } = useDialog(model, dialogEl)
   }
 
   .body {
+    padding-block-start: 0.75rem;
     position: relative;
     z-index: 10;
     overflow: auto;

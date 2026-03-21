@@ -4,8 +4,22 @@
   flex-direction: column;
   gap: 0.5rem;
 
+  :deep(svg) {
+    position: absolute;
+    color: var(--gray-500);
+    top: 0.4rem;
+    left: 0.75rem;
+    width: 1.5rem;
+    height: auto;
+    aspect-ratio: 1;
+  }
+
   .label {
     display: inline-block;
+  }
+
+  .ti-input {
+    position: relative;
   }
 
   .error {
@@ -13,5 +27,9 @@
     top: calc(100% + 0.5rem);
     color: var(--error);
     font: var(--text-regular-16);
+  }
+
+  &:has(svg) :deep(input) {
+    padding-inline-start: 2.5rem;
   }
 }

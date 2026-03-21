@@ -1,21 +1,21 @@
 <template>
   <div class="pi-wrapper">
     <RouterLink class="project-item" :to="to">
-      <div class="name">{{ project.name }}</div>
+      <div class="name">{{ project.title }}</div>
     </RouterLink>
-    <div v-if="project.results" class="results">
-      <ProjectResultItem v-for="result in project.results" :key="result.id" :result="result" />
+    <div v-if="project.optimizations" class="optimizations">
+      <OptimizationItem v-for="opt in project.optimizations" :key="opt.id" :optimization="opt" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import ProjectResultItem from '@/components/Projects/Blocks/ProjectResultItem.vue'
-import type { IProject } from '@/interfaces/Projects/IProject'
+import type { IProjectEntity } from '@/api/entities/Project/IProjectEntity'
+import OptimizationItem from '@/components/Projects/Blocks/OptimizationItem.vue'
 import { computed } from 'vue'
 
 const props = defineProps<{
-  project: IProject
+  project: IProjectEntity
 }>()
 
 const to = computed(() => ({ name: 'ProjectPage', params: { id: props.project.id } }))
@@ -26,7 +26,7 @@ const to = computed(() => ({ name: 'ProjectPage', params: { id: props.project.id
 @use '@/css/components/ProjectItem.scss';
 
 .pi-wrapper {
-  .results {
+  .optimizations {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;

@@ -15,11 +15,11 @@ export const fetchMiddleware: TMiddleware = async (ctx, next) => {
   }
 
   // POST/PUT
-  if (ctx.options.body) {
+  if (ctx.options.body && ctx.options.body instanceof FormData == false) {
     ctx.options.body = JSON.stringify(ctx.options.body)
   }
 
-  const url = `${ctx.options.baseUrl || ''}/${path}`
+  const url = `${ctx.options.baseUrl || ''}${path}`
   ctx.response = await fetch(url, ctx.options as any)
 
   await next(ctx)

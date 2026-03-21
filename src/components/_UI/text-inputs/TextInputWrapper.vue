@@ -1,7 +1,9 @@
 <template>
   <div class="ti-wrapper">
     <label v-if="label && inputId" :for="inputId">{{ label }}</label>
-    <slot />
+    <div class="ti-input">
+      <slot />
+    </div>
     <Transition name="anim-fade">
       <div v-if="$slots.error" class="error">
         <slot name="error" />

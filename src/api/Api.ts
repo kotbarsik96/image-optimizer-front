@@ -3,6 +3,7 @@ import type { IQueryOptions } from '@/api/interfaces/IQueryOptions'
 import type { IRequestProcessOptions } from '@/api/interfaces/IRequestProcessOptions'
 import type { TMiddleware, TQueryDelegate } from '@/api/interfaces/TMiddleware'
 import { fetchMiddleware } from '@/api/middlewares/fetchMiddleware'
+import { initHeadersMiddleware } from '@/api/middlewares/initHeadersMiddleware'
 import { retryMiddlewareBuilder, simpleRetryStrategy } from '@/api/middlewares/retryMiddleware'
 import type { ServerStatuses } from '@/api/ServerStatuses'
 import { useNotifications } from '@/composables/useNotifications'
@@ -13,7 +14,11 @@ export class Api {
 
   constructor(private baseUrl: string) {
     if (this.baseUrl.endsWith('/')) this.baseUrl = this.baseUrl.slice(0, -1)
-    this.middlewares = [retryMiddlewareBuilder(simpleRetryStrategy()), fetchMiddleware]
+    this.middlewares = [
+      retryMiddlewareBuilder(simpleRetryStrategy()),
+      initHeadersMiddleware,
+      fetchMiddleware,
+    ]
 
     this.notifications = useNotifications()
   }

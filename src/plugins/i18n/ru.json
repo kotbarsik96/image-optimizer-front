@@ -6,13 +6,18 @@
     "optimize": "Оптимизировать",
     "optimizedImages": "Оптимизированные изображения",
     "save": "Сохранить",
-    "cancel": "Отмена"
+    "cancel": "Отмена",
+    "newProject": "Новый проект",
+    "dropFilesHere": "Перетащите изображения сюда"
   },
   "home": {
     "upload": "Загрузить",
-    "prevOptimizations": "Предыдущие оптимизации"
+    "projects": "Проекты"
   },
   "project": {
-    "changeName": "Изменить название"
+    "changeName": "Изменить название",
+    "newProject": "Новый проект",
+    "newProjectTitle": "Название (можно оставить пустым)",
+    "listIsEmpty": "Список проектов пуст"
   }
 }

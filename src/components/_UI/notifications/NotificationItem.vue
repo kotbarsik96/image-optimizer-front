@@ -79,7 +79,7 @@ function close() {
   background-color: var(--white);
   position: relative;
   box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.1);
-  border-radius: 4px 12px 4px 12px;
+  border-radius: var(--b-radius-sm) var(--b-radius-big) var(--b-radius-sm) var(--b-radius-big);
   padding: 0.625rem;
   overflow: hidden;
 
