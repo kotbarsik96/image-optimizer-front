@@ -2,12 +2,14 @@
   <div class="wrapper">
     <RouterView />
     <NotificationsContainer />
+    <VueQueryDevtools />
   </div>
 </template>
 
 <script setup lang="ts">
 import { useBodyScrollLocker } from '@/composables/BodyScrollLocker/useBodyScrollLock'
 import NotificationsContainer from '@/components/_UI/notifications/NotificationsContainer.vue'
+import { VueQueryDevtools } from '@tanstack/vue-query-devtools'
 
 useBodyScrollLocker()
 </script>
