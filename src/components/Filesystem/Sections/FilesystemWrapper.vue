@@ -22,6 +22,8 @@
         @upload-end="onFilesUploadEnd"
       />
 
+      <FsNewFolderBtn v-if="currentFolderId" :folder-id="currentFolderId" />
+
       <FsFolder
         v-for="nestedFolder in folder.nested"
         :key="nestedFolder.id"
@@ -61,6 +63,7 @@ import SpinnerLoader from '@/components/_UI/SpinnerLoader.vue'
 import FsUploadBtn from '@/components/Filesystem/Blocks/FsUploadBtn.vue'
 import type { IImageEntityBase } from '@/api/entities/Image/IImageEntityBase'
 import type { IImageUpload } from '@/api/entities/Image/IImageUpload'
+import FsNewFolderBtn from '@/components/Filesystem/Blocks/FsNewFolderBtn.vue'
 
 const props = defineProps<{
   rootFolderId?: number
@@ -212,6 +215,7 @@ function onFilesUploadEnd(images: IImageUpload[]) {
   }
 
   .fs-block,
+  :deep(.fs-block),
   .skeleton {
     width: 190px;
     min-height: 160px;

@@ -32,4 +32,8 @@
   &:has(svg) :deep(input) {
     padding-inline-start: 2.5rem;
   }
+
+  &:has(.error) :deep(input) {
+    border-color: var(--error);
+  }
 }

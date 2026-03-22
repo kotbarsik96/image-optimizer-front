@@ -58,7 +58,5 @@ export class Api {
     if (!ctx.requestProcessOptions?.noErrorNotifications) this.handleErrorWithMessage(ctx)
   }
 
-  private async handleErrorWithMessage(ctx: IQueryContext) {
-    // this.notifications.addNotification("error", )
-  }
+  private async handleErrorWithMessage(ctx: IQueryContext) {}
 }

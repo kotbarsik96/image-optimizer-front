@@ -31,4 +31,13 @@ const folderTitle = computed(() => {
 <style lang="scss" scoped>
 @use '@/css/mixins/mixins.scss';
 @use '@/css/components/FilesystemBlock.scss';
+
+.fs-folder {
+  justify-content: center;
+
+  .img {
+    width: 4rem;
+    height: 4rem;
+  }
+}
 </style>

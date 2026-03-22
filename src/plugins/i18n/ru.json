@@ -9,7 +9,8 @@
     "cancel": "Отмена",
     "newProject": "Новый проект",
     "dropFilesHere": "Перетащите изображения сюда",
-    "upload": "Загрузить"
+    "upload": "Загрузить",
+    "newFolder": "Новая папка"
   },
   "home": {
     "projects": "Проекты"
@@ -22,7 +23,8 @@
     "filesToUpload": "Будут загружены файлы:"
   },
   "filesystem": {
-    "back": "В предыдущую папку",
-    "couldNotLoadContents": "Не удалось загрузить содержимое"
+    "goBack": "В предыдущую папку",
+    "couldNotLoadContents": "Не удалось загрузить содержимое",
+    "folderName": "Название папки"
   }
 }

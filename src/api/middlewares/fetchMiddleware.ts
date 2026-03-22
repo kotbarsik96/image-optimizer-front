@@ -1,3 +1,4 @@
+import { EContentType } from '@/api/interfaces/EContentType'
 import type { TMiddleware } from '@/api/interfaces/TMiddleware'
 import { removeEmptyProperties } from '@/utils/common'
 
@@ -16,7 +17,11 @@ export const fetchMiddleware: TMiddleware = async (ctx, next) => {
 
   // POST/PUT
   if (ctx.options.body && ctx.options.body instanceof FormData == false) {
-    ctx.options.body = JSON.stringify(ctx.options.body)
+    const body = new FormData()
+    Object.entries(ctx.options.body).forEach(([key, value]) => {
+      body.append(key, value)
+    })
+    ctx.options.body = body
   }
 
   const url = `${ctx.options.baseUrl || ''}${path}`
