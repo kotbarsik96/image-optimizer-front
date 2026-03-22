@@ -1,6 +1,7 @@
-import { onMounted, onUnmounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref, toValue, type MaybeRefOrGetter } from 'vue'
 
-export function useDragFiles(callbacks: {
+export function useDragFiles(options: {
+  dropTarget: MaybeRefOrGetter<HTMLElement | null>
   onOver?: (event: DragEvent) => void
   onLeave?: (event: DragEvent) => void
   onDrop?: (event: DragEvent) => void
@@ -8,33 +9,39 @@ export function useDragFiles(callbacks: {
   const isDragging = ref(false)
 
   onMounted(() => {
-    document.body.addEventListener('dragover', _onOver)
-    document.body.addEventListener('drop', _onDrop)
+    const target = toValue(options.dropTarget)
+    if (!target) return
+
+    target.addEventListener('dragover', _onOver)
+    target.addEventListener('drop', _onDrop)
     window.addEventListener('drop', windowDrop)
-    document.body.addEventListener('dragleave', _onLeave)
+    target.addEventListener('dragleave', _onLeave)
   })
 
   onUnmounted(() => {
-    document.body.removeEventListener('dragover', _onOver)
-    document.body.removeEventListener('drop', _onDrop)
+    const target = toValue(options.dropTarget)
+    if (!target) return
+
+    target.removeEventListener('dragover', _onOver)
+    target.removeEventListener('drop', _onDrop)
     window.removeEventListener('drop', windowDrop)
-    document.body.removeEventListener('dragleave', _onLeave)
+    target.removeEventListener('dragleave', _onLeave)
   })
 
   function _onOver(event: DragEvent) {
     event.preventDefault()
     isDragging.value = true
-    if (typeof callbacks.onOver == 'function') callbacks.onOver(event)
+    if (typeof options.onOver == 'function') options.onOver(event)
   }
 
   function _onDrop(event: DragEvent) {
     isDragging.value = false
-    if (typeof callbacks.onDrop == 'function') callbacks.onDrop(event)
+    if (typeof options.onDrop == 'function') options.onDrop(event)
   }
 
   function _onLeave(event: DragEvent) {
     isDragging.value = false
-    if (typeof callbacks.onLeave == 'function') callbacks.onLeave(event)
+    if (typeof options.onLeave == 'function') options.onLeave(event)
   }
 
   function windowDrop(event: DragEvent) {

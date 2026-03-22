@@ -89,7 +89,7 @@ const { closeDialog, closeDialogOnOuterClick } = useDialog(model, dialogEl)
   }
 
   .body {
-    padding-block-start: 0.75rem;
+    margin-block-start: 1rem;
     position: relative;
     z-index: 10;
     overflow: auto;

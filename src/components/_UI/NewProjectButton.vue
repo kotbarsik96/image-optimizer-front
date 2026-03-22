@@ -4,7 +4,7 @@
       <component :is="icon" />
       {{ text }}
     </button>
-    <NewProjectDialog v-model="dialogShown" />
+    <NewProjectDialog v-model="dialogShown" v-model:files="droppedImages" />
   </div>
 </template>
 
@@ -14,16 +14,26 @@ import IconUpload from '@/assets/icons/upload.svg'
 import NewProjectDialog from '@/components/Projects/_UI/NewProjectDialog.vue'
 import { useDragFiles } from '@/composables/useDragFiles'
 import { useToggler } from '@/composables/useToggler'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 
 const { isShown: dialogShown, show: showDialog } = useToggler()
 
+const droppedImages = ref<Array<File>>()
+
 const { isDragging } = useDragFiles({
+  dropTarget: document.body,
   onDrop: (event) => {
     event.preventDefault()
+    const images = Array.from(event.dataTransfer?.files || []).filter((i) =>
+      i.type.startsWith('image'),
+    )
+    if (images.length < 1) return
+
+    droppedImages.value = images
+    dialogShown.value = true
   },
 })
 
