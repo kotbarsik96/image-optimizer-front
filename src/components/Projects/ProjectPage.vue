@@ -33,7 +33,7 @@
       </div>
     </div>
 
-    <ChangeProjectNameDialog v-model="nameDialogOpen" />
+    <ChangeProjectNameDialog v-if="project?.id" v-model="nameDialogOpen" :project="project" />
   </div>
 </template>
 

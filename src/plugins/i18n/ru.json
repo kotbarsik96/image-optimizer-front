@@ -20,7 +20,8 @@
     "newProject": "Новый проект",
     "newProjectTitle": "Название (можно оставить пустым)",
     "listIsEmpty": "Список проектов пуст",
-    "filesToUpload": "Будут загружены файлы:"
+    "filesToUpload": "Будут загружены файлы:",
+    "newName": "Новое название"
   },
   "filesystem": {
     "goBack": "В предыдущую папку",
