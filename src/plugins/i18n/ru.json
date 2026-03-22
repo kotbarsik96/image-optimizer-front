@@ -20,5 +20,9 @@
     "newProjectTitle": "Название (можно оставить пустым)",
     "listIsEmpty": "Список проектов пуст",
     "filesToUpload": "Будут загружены файлы:"
+  },
+  "filesystem": {
+    "back": "В предыдущую папку",
+    "couldNotLoadContents": "Не удалось загрузить содержимое"
   }
 }

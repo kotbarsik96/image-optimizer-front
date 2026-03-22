@@ -18,7 +18,7 @@ const props = defineProps<{
   project: IProjectEntity
 }>()
 
-const to = computed(() => ({ name: 'ProjectPage', params: { id: props.project.id } }))
+const to = computed(() => ({ name: 'ProjectPage', params: { project_id: props.project.id } }))
 </script>
 
 <style lang="scss" scoped>

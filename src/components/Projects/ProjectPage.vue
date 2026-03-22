@@ -4,7 +4,7 @@
       <div class="header">
         <div class="_page-title">
           <div class="_pt-inner">
-            <h1 class="_h1">{{ $t('general.project') }}: "18-01-2026 16:33"</h1>
+            <h1 class="_h1">{{ $t('general.project') }}: "{{ project?.title }}"</h1>
             <button class="pt-button" type="button" @click="nameDialogOpen = true">
               <IconPencil />
             </button>
@@ -26,7 +26,7 @@
         </div>
       </div>
       <div class="filesystem">
-        <FilesystemWrapper />
+        <FilesystemWrapper :root-folder="project?.root_folder" />
       </div>
     </div>
 
@@ -41,11 +41,36 @@ import IconPlusCircle from '@/assets/icons/plus-circle.svg'
 import IconList from '@/assets/icons/list.svg'
 import ButtonRouterLink from '@/components/_UI/buttons/ButtonRouterLink.vue'
 import IconPencil from '@/assets/icons/pencil.svg'
-import { ref } from 'vue'
+import { computed, ref, toValue } from 'vue'
 import ChangeProjectNameDialog from '@/components/Projects/_UI/ChangeProjectNameDialog.vue'
 import FilesystemWrapper from '@/components/Filesystem/Sections/FilesystemWrapper.vue'
+import { useRoute } from 'vue-router'
+import { useQuery } from '@tanstack/vue-query'
+import type { IResponseWrapper } from '@/api/interfaces/IResponseWrapper'
+import type { IProjectEntity } from '@/api/entities/Project/IProjectEntity'
+import { useApi } from '@/composables/useApi'
+import { EQueryKeys } from '@/api/interfaces/EQueryKeys'
+
+const api = useApi()
 
 const nameDialogOpen = ref(false)
+
+const route = useRoute()
+
+const projectId = computed(() => Number(route.params.project_id))
+
+const { data } = useQuery<IResponseWrapper<IProjectEntity>>({
+  queryKey: [EQueryKeys.Project, projectId],
+  queryFn: async () => {
+    const response = await api.request(`/projects/${toValue(projectId)}`, {
+      method: 'GET',
+    })
+
+    return await response?.json()
+  },
+})
+
+const project = computed(() => data.value?.data)
 </script>
 
 <style lang="scss" scoped>

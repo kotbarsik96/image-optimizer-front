@@ -49,9 +49,9 @@ import TextInput from '@/components/_UI/text-inputs/TextInput.vue'
 import TextInputWrapper from '@/components/_UI/text-inputs/TextInputWrapper.vue'
 import { useMutation, useQueryClient } from '@tanstack/vue-query'
 import { useApi } from '@/composables/useApi'
-import { useProjectsListQuery } from '@/composables/queries/useProjectQuery'
 import { useNotifications } from '@/composables/useNotifications'
 import type { IResponseWrapper } from '@/api/interfaces/IResponseWrapper'
+import { EQueryKeys } from '@/api/interfaces/EQueryKeys'
 
 const props = defineProps<{
   files?: Array<File>
@@ -83,8 +83,6 @@ const imagesPreview = computed(() =>
   })),
 )
 
-const { queryKey } = useProjectsListQuery()
-
 const { mutate: createProject } = useMutation({
   mutationFn: async (title: string) => {
     const body = new FormData()
@@ -106,7 +104,7 @@ const { mutate: createProject } = useMutation({
 
   onSuccess: (data: IResponseWrapper<void>) => {
     queryClient.invalidateQueries({
-      queryKey,
+      queryKey: [EQueryKeys.ProjectsList],
     })
 
     if (data.message) addNotification('success', data.message)

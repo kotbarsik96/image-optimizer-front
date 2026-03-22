@@ -12,14 +12,28 @@
 </template>
 
 <script setup lang="ts">
+import type { IProjectEntity } from '@/api/entities/Project/IProjectEntity'
+import { EQueryKeys } from '@/api/interfaces/EQueryKeys'
+import type { IResponseWrapper } from '@/api/interfaces/IResponseWrapper'
 import SkeletonItem from '@/components/_UI/SkeletonItem.vue'
 import SpinnerLoader from '@/components/_UI/SpinnerLoader.vue'
 import ProjectItem from '@/components/Projects/Blocks/ProjectItem.vue'
-import { useProjectsListQuery } from '@/composables/queries/useProjectQuery'
+import { useApi } from '@/composables/useApi'
+import { useQuery } from '@tanstack/vue-query'
 import { computed } from 'vue'
 
-const { queryWrapper } = useProjectsListQuery()
-const { data, isPending, isFetching } = queryWrapper()
+const api = useApi()
+
+const { data, isPending, isFetching } = useQuery<IResponseWrapper<IProjectEntity[]>>({
+  queryKey: [EQueryKeys.ProjectsList],
+  queryFn: async () => {
+    const response = await api.request('/projects/', {
+      method: 'GET',
+    })
+
+    return await response?.json()
+  },
+})
 
 const list = computed(() => data.value?.data ?? [])
 </script>
