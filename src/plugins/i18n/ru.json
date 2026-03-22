@@ -10,7 +10,8 @@
     "newProject": "Новый проект",
     "dropFilesHere": "Перетащите изображения сюда",
     "upload": "Загрузить",
-    "newFolder": "Новая папка"
+    "newFolder": "Новая папка",
+    "delete": "Удалить"
   },
   "home": {
     "projects": "Проекты"
@@ -21,7 +22,10 @@
     "newProjectTitle": "Название (можно оставить пустым)",
     "listIsEmpty": "Список проектов пуст",
     "filesToUpload": "Будут загружены файлы:",
-    "newName": "Новое название"
+    "newName": "Новое название",
+    "doYouWantToRemove": "Удалить проект {0}?",
+    "repeatIsIncorrect": "Текст не совпадает с названием проекта",
+    "repeatToDelete": "Напишите название проекта для его удаления: {0}"
   },
   "filesystem": {
     "goBack": "В предыдущую папку",

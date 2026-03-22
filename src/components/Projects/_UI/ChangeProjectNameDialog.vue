@@ -1,11 +1,12 @@
 <template>
-  <DialogWindow class="cp-nd" v-model="dialogShown">
+  <DialogWindow class="cp-nd" v-model="shown">
     <div class="dialog-title">{{ $t('project.changeName') }}</div>
     <TextInputWrapper :input-id="inputId" :label="$t('project.newName')">
       <TextInput
         v-model="title"
         :id="inputId"
         :placeholder="$t('project.newName')"
+        v-autofocus="autofocusData"
         @keyup.enter="save"
       />
       <template #error v-if="error">{{ error }}</template>
@@ -23,6 +24,7 @@
 </template>
 
 <script setup lang="ts">
+import { vAutofocus } from '@/directives/vAutofocus'
 import DialogWindow from '@/components/_UI/dialog/DialogWindow.vue'
 import TextInputWrapper from '@/components/_UI/text-inputs/TextInputWrapper.vue'
 import TextInput from '@/components/_UI/text-inputs/TextInput.vue'
@@ -46,11 +48,13 @@ const { addNotification } = useNotifications()
 
 const inputId = 'change-project-name'
 
-const dialogShown = defineModel({ type: Boolean, default: false })
+const shown = defineModel({ type: Boolean, default: false })
 const title = ref(props.project.title)
 
 const error = ref('')
 watch(title, () => (error.value = ''))
+
+const autofocusData = { shown }
 
 const { mutate: save, isPending } = useMutation({
   mutationFn: async () => {
@@ -80,7 +84,7 @@ const { mutate: save, isPending } = useMutation({
 })
 
 function close() {
-  dialogShown.value = false
+  shown.value = false
   title.value = props.project.title
 }
 </script>

@@ -8,6 +8,9 @@
             <button class="pt-button" type="button" @click="nameDialogOpen = true">
               <IconPencil />
             </button>
+            <button class="pt-button" type="button" @click="deleteDialogOpen = true">
+              <IconDelete />
+            </button>
           </div>
         </div>
         <div class="buttons">
@@ -34,6 +37,7 @@
     </div>
 
     <ChangeProjectNameDialog v-if="project?.id" v-model="nameDialogOpen" :project="project" />
+    <DeleteProjectDialog v-if="project?.id" v-model="deleteDialogOpen" :project="project" />
   </div>
 </template>
 
@@ -44,6 +48,7 @@ import IconPlusCircle from '@/assets/icons/plus-circle.svg'
 import IconList from '@/assets/icons/list.svg'
 import ButtonRouterLink from '@/components/_UI/buttons/ButtonRouterLink.vue'
 import IconPencil from '@/assets/icons/pencil.svg'
+import IconDelete from '@/assets/icons/delete.svg'
 import { computed, ref, toValue } from 'vue'
 import ChangeProjectNameDialog from '@/components/Projects/_UI/ChangeProjectNameDialog.vue'
 import FilesystemWrapper from '@/components/Filesystem/Sections/FilesystemWrapper.vue'
@@ -53,10 +58,12 @@ import type { IResponseWrapper } from '@/api/interfaces/IResponseWrapper'
 import type { IProjectEntity } from '@/api/entities/Project/IProjectEntity'
 import { useApi } from '@/composables/useApi'
 import { EQueryKeys } from '@/api/interfaces/EQueryKeys'
+import DeleteProjectDialog from '@/components/Projects/_UI/DeleteProjectDialog.vue'
 
 const api = useApi()
 
 const nameDialogOpen = ref(false)
+const deleteDialogOpen = ref(false)
 
 const route = useRoute()
 

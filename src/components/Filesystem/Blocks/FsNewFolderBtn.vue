@@ -6,10 +6,10 @@
         {{ $t('general.newFolder') }}
       </span>
     </button>
-    <DialogWindow v-model="dialogShown">
+    <DialogWindow v-model="shown">
       <div class="dialog-title">{{ $t('general.newFolder') }}</div>
       <TextInputWrapper :input-id="inputId" :label="$t('filesystem.folderName')">
-        <TextInput v-model="name" :id="inputId" />
+        <TextInput v-model="name" :id="inputId" v-autofocus="autofocusData" @keyup.enter="mutate" />
         <template v-if="nameError" #error>{{ nameError }}</template>
       </TextInputWrapper>
       <div class="dialog-buttons">
@@ -26,6 +26,7 @@
 </template>
 
 <script setup lang="ts">
+import { vAutofocus } from '@/directives/vAutofocus'
 import type { IFolderEntity } from '@/api/entities/Folder/IFolderEntity'
 import { EQueryKeys } from '@/api/interfaces/EQueryKeys'
 import type { IResponseWrapper } from '@/api/interfaces/IResponseWrapper'
@@ -63,7 +64,6 @@ const { mutate, isPending } = useMutation({
     const data = (await response?.json()) as IResponseWrapper<IFolderEntity | null>
 
     if (response?.ok) {
-      console.log(data.data?.id)
       queryClient.invalidateQueries({
         queryKey: [EQueryKeys.Folder, data?.data?.parent_id],
       })
@@ -78,7 +78,9 @@ const { mutate, isPending } = useMutation({
   },
 })
 
-const dialogShown = ref(false)
+const shown = ref(false)
+
+const autofocusData = { shown }
 
 const name = ref('')
 const nameError = ref('')
@@ -87,10 +89,10 @@ watch(name, () => {
 })
 
 function close() {
-  dialogShown.value = false
+  shown.value = false
 }
 function open() {
-  dialogShown.value = true
+  shown.value = true
 }
 </script>
 

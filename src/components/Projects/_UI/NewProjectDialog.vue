@@ -10,6 +10,7 @@
           v-model="title"
           placeholder="2026-01-01 00:00:00"
           :id="inputId"
+          v-autofocus="autofocusData"
           @keyup.enter="save"
         />
       </TextInputWrapper>
@@ -39,6 +40,7 @@
 </template>
 
 <script setup lang="ts">
+import { vAutofocus } from '@/directives/vAutofocus'
 import { computed, ref } from 'vue'
 import IconSave from '@/assets/icons/save.svg'
 import IconPencil from '@/assets/icons/pencil.svg'
@@ -69,6 +71,8 @@ const shown = defineModel<boolean>()
 const hideDialog = () => (shown.value = false)
 
 const title = ref('')
+
+const autofocusData = { shown }
 
 const inputId = 'new-project-title'
 
