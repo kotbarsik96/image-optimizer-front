@@ -8,10 +8,10 @@
     "save": "Сохранить",
     "cancel": "Отмена",
     "newProject": "Новый проект",
-    "dropFilesHere": "Перетащите изображения сюда"
+    "dropFilesHere": "Перетащите изображения сюда",
+    "upload": "Загрузить"
   },
   "home": {
-    "upload": "Загрузить",
     "projects": "Проекты"
   },
   "project": {

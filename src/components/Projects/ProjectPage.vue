@@ -26,7 +26,10 @@
         </div>
       </div>
       <div class="filesystem">
-        <FilesystemWrapper :root-folder="project?.root_folder" />
+        <FilesystemWrapper
+          :root-folder-id="project?.root_folder?.id"
+          :is-root-loading="isPending"
+        />
       </div>
     </div>
 
@@ -59,7 +62,7 @@ const route = useRoute()
 
 const projectId = computed(() => Number(route.params.project_id))
 
-const { data } = useQuery<IResponseWrapper<IProjectEntity>>({
+const { data, isPending } = useQuery<IResponseWrapper<IProjectEntity>>({
   queryKey: [EQueryKeys.Project, projectId],
   queryFn: async () => {
     const response = await api.request(`/projects/${toValue(projectId)}`, {

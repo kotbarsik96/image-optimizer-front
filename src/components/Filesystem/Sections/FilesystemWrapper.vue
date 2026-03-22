@@ -1,42 +1,70 @@
 <template>
   <div class="fs-wrapper">
-    <template v-if="rootFolder">
-      <div class="header">
-        <ButtonGeneral :aria-label="$t('filesystem.goBack')">
+    <div class="header">
+      <div v-if="buttonsShown" class="buttons">
+        <ButtonRouterLink
+          v-if="linkBack"
+          class="--back"
+          :aria-label="$t('filesystem.goBack')"
+          :to="linkBack"
+        >
           <IconChevronDown />
-        </ButtonGeneral>
-        <div class="path">{{ path }}</div>
+        </ButtonRouterLink>
       </div>
-      <div class="body">
-        <FsFolder
-          v-for="nestedFolder in rootFolder.nested"
-          :key="nestedFolder.id"
-          :folder="nestedFolder"
-          :routeName="routeName"
-        />
-        <FsImage v-for="image in rootFolder.images" :key="image.id" :image="image" />
-      </div>
-    </template>
+
+      <div class="path">{{ path }}</div>
+    </div>
+    <div v-if="folder" class="contents">
+      <FsUploadBtn
+        v-if="currentFolderId"
+        :folder-id="currentFolderId"
+        @upload-start="onFilesUploadStart"
+        @upload-end="onFilesUploadEnd"
+      />
+
+      <FsFolder
+        v-for="nestedFolder in folder.nested"
+        :key="nestedFolder.id"
+        :folder="nestedFolder"
+        :routeName="routeName"
+      />
+      <FsImage v-for="image in imagesWithUploads" :key="image.id" :image="image" />
+    </div>
+
+    <div v-else-if="isPending" class="contents">
+      <SkeletonItem v-for="_ in 10" />
+    </div>
+
     <div v-else class="fw-error">
       {{ $t('filesystem.couldNotLoadContents') }}
     </div>
+
+    <SpinnerLoader v-if="isFetching && isEnabled" />
   </div>
 </template>
 
 <script setup lang="ts">
 import type { IFolderEntity } from '@/api/entities/Folder/IFolderEntity'
-import ButtonGeneral from '@/components/_UI/buttons/ButtonGeneral.vue'
+import ButtonRouterLink from '@/components/_UI/buttons/ButtonRouterLink.vue'
 import IconChevronDown from '@/assets/icons/chevron-down.svg'
 import FsFolder from '@/components/Filesystem/Blocks/FsFolder.vue'
 import FsImage from '@/components/Filesystem/Blocks/FsImage.vue'
 import { useRoute } from 'vue-router'
-import { computed, toValue } from 'vue'
+import { computed, ref, toValue } from 'vue'
 import { useQuery } from '@tanstack/vue-query'
 import { useApi } from '@/composables/useApi'
 import { EQueryKeys } from '@/api/interfaces/EQueryKeys'
+import type { IResponseWrapper } from '@/api/interfaces/IResponseWrapper'
+import SkeletonItem from '@/components/_UI/SkeletonItem.vue'
+import SpinnerLoader from '@/components/_UI/SpinnerLoader.vue'
+
+import FsUploadBtn from '@/components/Filesystem/Blocks/FsUploadBtn.vue'
+import type { IImageEntityBase } from '@/api/entities/Image/IImageEntityBase'
+import type { IImageUpload } from '@/api/entities/Image/IImageUpload'
 
 const props = defineProps<{
-  rootFolder: IFolderEntity | undefined
+  rootFolderId?: number
+  isRootLoading?: boolean
 }>()
 
 const api = useApi()
@@ -44,13 +72,22 @@ const api = useApi()
 const route = useRoute()
 const routeName = computed(() => route.name as string)
 
-const currentFolderId = computed(() => Number(route.params.folder_id) ?? props.rootFolder?.id)
-
-const isNotRootFolder = computed(() => {
-  return !!props.rootFolder && currentFolderId.value !== props.rootFolder?.id
+const currentFolderId = computed(() => {
+  let id = Number(route.params.folder_id)
+  if (isNaN(id) || !id) id = props.rootFolderId ?? 0
+  return id
 })
 
-const { data } = useQuery({
+const isRootFolder = computed(
+  () => !!currentFolderId.value && currentFolderId.value === props.rootFolderId,
+)
+
+const {
+  data,
+  isFetching,
+  isPending: _isPending,
+  isEnabled,
+} = useQuery<IResponseWrapper<IFolderEntity>>({
   queryKey: [EQueryKeys.Folder, currentFolderId],
   queryFn: async () => {
     const response = await api.request(`/folders/${toValue(currentFolderId)}`, {
@@ -59,12 +96,126 @@ const { data } = useQuery({
 
     return await response?.json()
   },
-  enabled: isNotRootFolder,
+  enabled: () => !!currentFolderId.value,
 })
 
-const path = computed(() => (props.rootFolder?.path == '.' ? '/' : props))
+const isPending = computed(() => {
+  let state = false
+
+  if (isRootFolder.value) state = props.isRootLoading || _isPending.value
+  else state = _isPending.value
+
+  return state
+})
+
+const pendingUploads = ref<IImageEntityBase[]>([])
+
+const folder = computed(() => data.value?.data)
+
+const path = computed(() => (folder.value?.path == '.' ? '/' : (folder.value?.path ?? '')))
+
+const linkBack = computed(() => {
+  let link = undefined
+  if (folder.value?.parent_id) {
+    link = {
+      name: routeName.value,
+      params: {
+        project_id: route.params.project_id,
+        folder_id: folder.value.parent_id,
+      },
+    }
+  }
+  return link
+})
+
+const buttonsShown = computed(() => !!linkBack.value)
+
+const imagesWithUploads = computed(() => [...pendingUploads.value, ...(folder.value?.images ?? [])])
+
+async function onFilesUploadStart(files: File[]) {
+  pendingUploads.value = files
+    .filter((f) => f.name.startsWith('image/'))
+    .map((f) => {
+      const nameSplit = f.name.split('.')
+      const filename = nameSplit.slice(0, -1).join('.')
+      const extension = nameSplit.slice(-1).join('')
+
+      const imagesLength = folder.value?.images?.length ?? 0
+      const lastImage = folder.value?.images?.[imagesLength - 1]
+      const lastImageId = lastImage?.id ?? 0
+
+      return {
+        id: lastImageId + 1,
+        url: URL.createObjectURL(f),
+        extension,
+        filename,
+      }
+    })
+}
+
+function onFilesUploadEnd(images: IImageUpload[]) {
+  pendingUploads.value = []
+}
 </script>
 
 <style lang="scss" scoped>
 @use '@/css/mixins/mixins.scss';
+
+.fs-wrapper {
+  border: 1px solid var(--gray-500);
+  padding: 1.25rem 2.5rem;
+  border-radius: 12px;
+  margin-block-start: 2.5rem;
+
+  .header {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.875rem;
+    margin-block-end: 1rem;
+  }
+
+  .path {
+    font: var(--text-regular-21);
+    color: var(--text);
+  }
+
+  .buttons {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .button {
+      padding: 0;
+      width: 2rem;
+      height: auto;
+      aspect-ratio: 1;
+
+      svg {
+        width: 1.5rem;
+        height: auto;
+        aspect-ratio: 1;
+      }
+    }
+
+    .button.--back {
+      svg {
+        transform: rotate(90deg);
+      }
+    }
+  }
+
+  .contents {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+  }
+
+  .fs-block,
+  .skeleton {
+    width: 190px;
+    min-height: 160px;
+    border-radius: var(--b-radius-sm);
+  }
+}
 </style>

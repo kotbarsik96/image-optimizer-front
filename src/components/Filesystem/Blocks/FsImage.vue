@@ -6,11 +6,11 @@
 </template>
 
 <script setup lang="ts">
-import type { IImageEntity } from '@/api/entities/Image/IImageEntity'
+import type { IImageEntityBase } from '@/api/entities/Image/IImageEntityBase'
 import { computed } from 'vue'
 
 const props = defineProps<{
-  image: IImageEntity
+  image: IImageEntityBase
 }>()
 
 const title = computed(() => `${props.image.filename}.${props.image.extension}`)

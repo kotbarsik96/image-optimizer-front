@@ -7,3 +7,9 @@ export function removeEmptyProperties(obj: Record<string, any> | undefined) {
   }
   return _obj
 }
+
+export function delay(timeout: number) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, timeout)
+  })
+}

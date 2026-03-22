@@ -1,8 +1,8 @@
 <template>
-  <NuxtLink class="fs-folder fs-block" :to="link">
+  <RouterLink class="fs-folder fs-block" :to="link">
     <IconFolder class="img" />
     <div class="title">{{ folderTitle }}</div>
-  </NuxtLink>
+  </RouterLink>
 </template>
 
 <script setup lang="ts">
