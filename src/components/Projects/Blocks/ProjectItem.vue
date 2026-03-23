@@ -3,15 +3,11 @@
     <RouterLink class="project-item" :to="to">
       <div class="name">{{ project.title }}</div>
     </RouterLink>
-    <div v-if="project.optimizations" class="optimizations">
-      <OptimizationItem v-for="opt in project.optimizations" :key="opt.id" :optimization="opt" />
-    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import type { IProjectEntity } from '@/api/entities/Project/IProjectEntity'
-import OptimizationItem from '@/components/Projects/Blocks/OptimizationItem.vue'
 import { computed } from 'vue'
 
 const props = defineProps<{

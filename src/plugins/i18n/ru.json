@@ -31,5 +31,9 @@
     "goBack": "В предыдущую папку",
     "couldNotLoadContents": "Не удалось загрузить содержимое",
     "folderName": "Название папки"
+  },
+  "optimization": {
+    "newOptimization": "Начать оптимизацию",
+    "titleField": "Название оптимизации (можно оставить пустым)"
   }
 }

@@ -13,11 +13,18 @@
   box-shadow: var(--shadow);
   transition: var(--general-transition);
 
+  .icons {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.625rem;
+  }
+
   .name {
     padding-block-start: 0.2rem;
   }
 
-  svg {
+  .icon {
     width: 2rem;
     height: auto;
     aspect-ratio: 1;

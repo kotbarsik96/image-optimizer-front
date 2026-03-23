@@ -18,7 +18,7 @@
             <IconHome />
             {{ $t('general.toHomepage') }}
           </ButtonRouterLink>
-          <ButtonGeneral button-style="success">
+          <ButtonGeneral button-style="success" @click="optimizationDialogOpen = true">
             <IconPlusCircle />
             {{ $t('general.optimize') }}
           </ButtonGeneral>
@@ -34,10 +34,16 @@
           :is-root-loading="isPending"
         />
       </div>
+      <OptimizationsList v-if="project" class="p-opts" :project="project" />
     </div>
 
     <ChangeProjectNameDialog v-if="project?.id" v-model="nameDialogOpen" :project="project" />
     <DeleteProjectDialog v-if="project?.id" v-model="deleteDialogOpen" :project="project" />
+    <OptimizationStartDialog
+      v-if="project?.id"
+      v-model="optimizationDialogOpen"
+      :project="project"
+    />
   </div>
 </template>
 
@@ -59,11 +65,14 @@ import type { IProjectEntity } from '@/api/entities/Project/IProjectEntity'
 import { useApi } from '@/composables/useApi'
 import { EQueryKeys } from '@/api/interfaces/EQueryKeys'
 import DeleteProjectDialog from '@/components/Projects/_UI/DeleteProjectDialog.vue'
+import OptimizationStartDialog from '@/components/Optimizations/_UI/OptimizationStartDialog.vue'
+import OptimizationsList from '@/components/Optimizations/Sections/OptimizationsList.vue'
 
 const api = useApi()
 
 const nameDialogOpen = ref(false)
 const deleteDialogOpen = ref(false)
+const optimizationDialogOpen = ref(false)
 
 const route = useRoute()
 
@@ -103,6 +112,15 @@ const project = computed(() => data.value?.data)
     display: flex;
     align-items: center;
     gap: 1.25rem;
+    margin-block-start: 2.5rem;
+  }
+
+  .p-opts {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    max-width: 500px;
+    margin-inline: auto;
     margin-block-start: 2.5rem;
   }
 }
