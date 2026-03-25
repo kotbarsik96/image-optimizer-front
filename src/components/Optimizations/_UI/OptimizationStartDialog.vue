@@ -5,12 +5,24 @@
       <TextInputWrapper input-id="newopt-title" :label="$t('optimization.titleField')">
         <TextInput v-model="title" id="newopt-title" placeholder="2026-01-01 00:00:00" />
       </TextInputWrapper>
-      <TextInputWrapper input-id="newopt-extensions" label="Расширения (пример: avif|webp|jpg)">
-        <TextInput v-model="extensions" id="newopt-extensions" placeholder="avif|webp|jpg" />
-      </TextInputWrapper>
-      <TextInputWrapper input-id="newopt-sizes" label="Размеры (пример: 25|50|75)">
-        <TextInput v-model="sizes" id="newopt-sizes" placeholder="25|50|75" />
-      </TextInputWrapper>
+      <div class="extensions">
+        <div class="title">{{ $t('optimization.extensions') }}:</div>
+        <CheckboxLabel
+          v-for="ext in Object.keys(supportedExtensions)"
+          :value="ext"
+          :label="ext.toUpperCase()"
+          v-model="extensions"
+        />
+      </div>
+      <div class="sizes">
+        <NumberInputGroup
+          v-model="sizes"
+          :label="$t('optimization.sizesTitle')"
+          :max-inputs-count="5"
+          inputs-id="newopt-sizes"
+          inputs-label="optimization.sizeNum"
+        />
+      </div>
       <Transition name="anim-fade">
         <div v-if="error" class="error">{{ error }}</div>
       </Transition>
@@ -32,13 +44,16 @@ import type { IProjectEntity } from '@/api/entities/Project/IProjectEntity'
 import type { IResponseWrapper } from '@/api/interfaces/IResponseWrapper'
 import IconSave from '@/assets/icons/save.svg'
 import ButtonGeneral from '@/components/_UI/buttons/ButtonGeneral.vue'
+import CheckboxLabel from '@/components/_UI/CheckboxLabel.vue'
 import DialogWindow from '@/components/_UI/dialog/DialogWindow.vue'
 import TextInput from '@/components/_UI/text-inputs/TextInput.vue'
 import TextInputWrapper from '@/components/_UI/text-inputs/TextInputWrapper.vue'
 import { useApi } from '@/composables/useApi'
 import { useNotifications } from '@/composables/useNotifications'
+import { supportedExtensions } from '@/interfaces/_General/EExtensions'
 import { useMutation, useQueryClient } from '@tanstack/vue-query'
 import { ref, watch } from 'vue'
+import NumberInputGroup from '@/components/_UI/text-inputs/NumberInputGroup.vue'
 
 const props = defineProps<{
   project: IProjectEntity
@@ -51,20 +66,21 @@ const { addNotification } = useNotifications()
 const shown = defineModel<boolean>()
 
 const title = ref('')
-const extensions = ref('')
-const sizes = ref('')
+const extensions = ref<Array<string>>([])
+const sizes = ref([])
 
 const error = ref('')
 watch(title, () => (error.value = ''))
 
 const { mutate, isPending } = useMutation({
   mutationFn: async () => {
+    console.log(sizes.value.join('|'), sizes.value)
     const response = await api.request(`/optimizations/start/${props.project.id}`, {
       method: 'POST',
       body: {
         title: title.value,
-        extensions: extensions.value,
-        sizes: sizes.value,
+        extensions: extensions.value.join('|'),
+        sizes: sizes.value.join('|'),
       },
     })
 
@@ -101,6 +117,34 @@ function close() {
     text-align: center;
     font: var(--text-medium-18);
     color: var(--error);
+  }
+
+  .extensions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+  }
+
+  .title {
+    margin-block-end: 0.25rem;
+    font: var(--text-regular-18);
+    color: var(--text);
+  }
+
+  .sizes {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    .ti-wrapper {
+      :deep(.ti-input) {
+        max-width: 4rem;
+      }
+
+      :deep(input) {
+        text-align: center;
+      }
+    }
   }
 }
 </style>

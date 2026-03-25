@@ -1,6 +1,6 @@
 <template>
   <div class="ti-wrapper">
-    <label v-if="label && inputId" :for="inputId">{{ label }}</label>
+    <label v-if="label && inputId" class="label" :for="inputId">{{ label }}</label>
     <div class="ti-input">
       <slot />
     </div>

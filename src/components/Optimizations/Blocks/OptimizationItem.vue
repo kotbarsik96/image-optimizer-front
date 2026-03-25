@@ -12,7 +12,7 @@ import type { IOptimizationEntity } from '@/api/entities/Optimization/IOptimizat
 import type { IResponseWrapper } from '@/api/interfaces/IResponseWrapper'
 import { useApi } from '@/composables/useApi'
 import { useNotifications } from '@/composables/useNotifications'
-import { extensionIconMap } from '@/interfaces/_General/EExtensions'
+import { supportedExtensions } from '@/interfaces/_General/EExtensions'
 import { computed } from 'vue'
 
 const props = defineProps<{
@@ -24,7 +24,7 @@ const api = useApi()
 const { addNotification } = useNotifications()
 
 const extensionIcons = computed(() => {
-  return props.optimization.extensions.split('|').map((ext) => extensionIconMap[ext])
+  return props.optimization.extensions.split('|').map((ext) => supportedExtensions[ext]?.icon)
 })
 
 async function downloadZip() {

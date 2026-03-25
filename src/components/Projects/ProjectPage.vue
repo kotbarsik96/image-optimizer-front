@@ -34,7 +34,10 @@
           :is-root-loading="isPending"
         />
       </div>
-      <OptimizationsList v-if="project" class="p-opts" :project="project" />
+      <div class="p-opts">
+        <div class="po-title">{{ $t('project.optimizations') }}</div>
+        <OptimizationsList v-if="project" :project="project" />
+      </div>
     </div>
 
     <ChangeProjectNameDialog v-if="project?.id" v-model="nameDialogOpen" :project="project" />
@@ -116,12 +119,21 @@ const project = computed(() => data.value?.data)
   }
 
   .p-opts {
-    display: flex;
-    flex-direction: column;
-    gap: 0.625rem;
-    max-width: 500px;
-    margin-inline: auto;
     margin-block-start: 2.5rem;
+
+    .po-title {
+      margin-block-end: 0.5rem;
+      font: var(--text-h2);
+      text-align: center;
+    }
+
+    .optimizations {
+      display: flex;
+      flex-direction: column;
+      gap: 0.625rem;
+      max-width: 500px;
+      margin-inline: auto;
+    }
   }
 }
 </style>

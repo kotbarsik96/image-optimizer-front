@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, nextTick, ref } from 'vue'
+import { computed, nextTick, ref, useTemplateRef } from 'vue'
 
 const props = withDefaults(
   defineProps<{
@@ -96,6 +96,13 @@ const shownValue = computed({
     return value
   },
   set(value: string) {
+    // отрезать лишнюю часть после точки (например, при вставке)
+    const fractionLength = value.split('.').at(1)?.length ?? 0
+    if (fractionLength > _maxFractionDigits.value) {
+      const num = Number(value)
+      if (!isNaN(num)) value = round(num, _maxFractionDigits.value)
+    }
+
     // замена "0" на "-"
     if (props.min < 0 && value.startsWith('0-')) {
       _shownValue.value = '-'
@@ -142,10 +149,10 @@ const symbolsRegexp = computed(() => {
 
 function onInteraction(event: Event) {
   const target = event.target as HTMLInputElement
-  const startValue = shownValue.value
+  const startValue = shownValue.value.replace(',', '.')
   const startPosition = target.selectionStart ?? target.value.length
 
-  shownValue.value = target.value
+  shownValue.value = target.value.replace(',', '.')
   target.value = shownValue.value
   nextTick().then(() => {
     const valueChanged = startValue !== shownValue.value

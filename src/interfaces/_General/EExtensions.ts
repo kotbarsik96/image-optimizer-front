@@ -4,10 +4,21 @@ import IconSvg from '@/assets/icons/extensions/svg.svg'
 import IconPng from '@/assets/icons/extensions/png.svg'
 import IconJpg from '@/assets/icons/extensions/jpg.svg'
 
-export const extensionIconMap: Record<string, any> = {
-  avif: IconAvif,
-  webp: IconWebp,
-  svg: IconSvg,
-  png: IconPng,
-  jpg: IconJpg,
+export interface IExtensionData {
+  icon: any
+}
+
+export const supportedExtensions: Record<string, IExtensionData> = {
+  avif: {
+    icon: IconAvif,
+  },
+  webp: {
+    icon: IconWebp,
+  },
+  png: {
+    icon: IconPng,
+  },
+  jpg: {
+    icon: IconJpg,
+  },
 }

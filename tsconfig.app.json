@@ -9,6 +9,7 @@
       "@/*": ["./src/*"]
     },
 
-    "strictPropertyInitialization": false
+    "strictPropertyInitialization": false,
+    "lib": ["DOM", "ES2022"]
   }
 }
