@@ -5,7 +5,7 @@ dialog {
   border-width: 0;
   outline: none;
   opacity: 0;
-  transform: scale(0.5);
+  transform: scale(0.9);
   pointer-events: none;
   animation: dialogHide 0.15s ease-out;
   position: fixed;
@@ -35,7 +35,7 @@ dialog {
   @keyframes dialogOpen {
     0% {
       opacity: 0;
-      transform: scale(0.5);
+      transform: scale(0.9);
       display: none;
     }
     100% {
@@ -52,7 +52,7 @@ dialog {
     }
     100% {
       opacity: 0;
-      transform: scale(0.5);
+      transform: scale(0.9);
       display: none;
     }
   }
