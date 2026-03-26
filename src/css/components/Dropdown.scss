@@ -5,20 +5,31 @@
   --bg-color-default: var(--gray-25);
   --bg-color-hover: var(--gray-200);
   --bg-color-selected: var(--primary-1);
-  --text-color-default: var(--gray-600);
+  --text-color-default: var(--gray-700);
   --text-color-selected: var(--gray-25);
   --border-color-default: var(--gray-600);
 
   font: var(--text-regular-16);
   position: relative;
+  z-index: 50;
+
+  .label {
+    font: var(--text-medium-18);
+    margin-block-end: 0.5rem;
+  }
 
   .summary {
     padding: 0.25rem 1rem;
     border-radius: var(--b-radius);
-    background-color: var(--gray-);
+    background-color: var(--bg-color-default);
     color: var(--text-color-default);
     border: 1px solid var(--border-color-default);
     box-shadow: var(--shadow);
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font: var(--text-regular-18);
     transition: var(--general-transition);
 
     &:hover {
@@ -29,6 +40,9 @@
   .chevron {
     color: var(--text-color-default);
     flex-shrink: 0;
+    width: 1.25rem;
+    height: auto;
+    aspect-ratio: 1;
     transition: var(--general-transition);
   }
 
@@ -46,12 +60,26 @@
   }
 
   .item {
+    cursor: pointer;
     border-bottom: 1px solid var(--border-color-default);
+    background: var(--bg-color-default);
     color: var(--text-color-default);
+    font: var(--text-regular-18);
+    padding: 0.25rem 1rem;
     transition: var(--general-transition);
 
     &:hover {
       background-color: var(--bg-color-hover);
+    }
+
+    &:last-child {
+      border-bottom: 0;
+      border-bottom-left-radius: var(--b-radius);
+      border-bottom-right-radius: var(--b-radius);
+    }
+
+    &.--selected {
+      background-color: var(--bg-color-selected);
     }
   }
 
@@ -78,8 +106,8 @@
       @include animation-styles.shown;
     }
 
-    .item,
-    .item:hover {
+    > .item,
+    > .item:hover {
       background-color: var(--bg-color-selected);
       color: var(--text-color-selected);
     }

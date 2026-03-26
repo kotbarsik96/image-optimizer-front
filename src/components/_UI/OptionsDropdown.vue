@@ -1,5 +1,6 @@
 <template>
   <div class="dropdown" :class="classes" v-click-away="hide">
+    <div v-if="label" class="label">{{ label }}</div>
     <button class="summary" :aria-label="$t('aria.toggleDropdown')" type="button" @click="toggle">
       <TheIcon class="icon" :icon="currentOption?.icon ?? placeholderIcon" />
       <span>{{ summary }}</span>
@@ -10,6 +11,7 @@
         v-for="item in options"
         :key="item.value"
         class="item"
+        :class="{ '--selected': item.value === modelValue }"
         role="option"
         @click="updateValue(item)"
       >
@@ -30,6 +32,7 @@ import { useI18n } from 'vue-i18n'
 import TheIcon from '@/components/_UI/TheIcon.vue'
 
 const props = defineProps<{
+  label?: string
   options: IDropdownOption[]
   placeholder?: string
   placeholderIcon?: any

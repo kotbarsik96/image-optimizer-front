@@ -23,9 +23,7 @@
           inputs-label="optimization.sizeNum"
         />
       </div>
-      <Transition name="anim-fade">
-        <div v-if="error" class="error">{{ error }}</div>
-      </Transition>
+      <ErrorText :error="error" />
     </div>
     <div class="dialog-buttons">
       <ButtonGeneral :is-loading="isPending" @click="mutate">
@@ -54,6 +52,7 @@ import { supportedExtensions } from '@/interfaces/_General/EExtensions'
 import { useMutation, useQueryClient } from '@tanstack/vue-query'
 import { ref, watch } from 'vue'
 import NumberInputGroup from '@/components/_UI/text-inputs/NumberInputGroup.vue'
+import ErrorText from '@/components/_UI/ErrorText.vue'
 
 const props = defineProps<{
   project: IProjectEntity
@@ -111,12 +110,6 @@ function close() {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-  }
-
-  .error {
-    text-align: center;
-    font: var(--text-medium-18);
-    color: var(--error);
   }
 
   .extensions {

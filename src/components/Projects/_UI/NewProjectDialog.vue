@@ -11,7 +11,7 @@
           placeholder="2026-01-01 00:00:00"
           :id="inputId"
           v-autofocus="autofocusData"
-          @keyup.enter="save"
+          @keyup.enter="mutate"
         />
       </TextInputWrapper>
       <div v-if="imagesPreview.length > 0" class="uploads">
@@ -26,9 +26,15 @@
           </div>
         </div>
       </div>
+      <OptionsDropdown
+        v-model="storage"
+        :options="availableStoragesOptions"
+        :label="$t('general.storageType')"
+      />
     </div>
+    <ErrorText :error="error" />
     <div class="dialog-buttons">
-      <ButtonGeneral button-style="primary" @click="save">
+      <ButtonGeneral button-style="primary" @click="mutate">
         <IconSave />
         {{ $t('general.save') }}
       </ButtonGeneral>
@@ -41,7 +47,7 @@
 
 <script setup lang="ts">
 import { vAutofocus } from '@/directives/vAutofocus'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import IconSave from '@/assets/icons/save.svg'
 import IconPencil from '@/assets/icons/pencil.svg'
 import CloseIcon from '@/assets/icons/close.svg'
@@ -54,6 +60,11 @@ import { useApi } from '@/composables/useApi'
 import { useNotifications } from '@/composables/useNotifications'
 import type { IResponseWrapper } from '@/api/interfaces/IResponseWrapper'
 import { EQueryKeys } from '@/api/interfaces/EQueryKeys'
+import type { IProjectEntity } from '@/api/entities/Project/IProjectEntity'
+import ErrorText from '@/components/_UI/ErrorText.vue'
+import OptionsDropdown from '@/components/_UI/OptionsDropdown.vue'
+import { availableStorages, EStorage } from '@/enums/EStorage'
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps<{
   files?: Array<File>
@@ -63,6 +74,8 @@ const emit = defineEmits<{
   (e: 'update:files', files: Array<File>): void
 }>()
 
+const { t } = useI18n()
+
 const api = useApi()
 const queryClient = useQueryClient()
 const { addNotification } = useNotifications()
@@ -71,6 +84,17 @@ const shown = defineModel<boolean>()
 const hideDialog = () => (shown.value = false)
 
 const title = ref('')
+const storage = ref(EStorage.Local)
+
+const error = ref('')
+watch(title, () => (error.value = ''))
+
+const availableStoragesOptions = computed(() =>
+  availableStorages.map((st) => ({
+    label: t(`general.storages.${st}`),
+    value: st,
+  })),
+)
 
 const autofocusData = { shown }
 
@@ -87,10 +111,11 @@ const imagesPreview = computed(() =>
   })),
 )
 
-const { mutate: createProject } = useMutation({
-  mutationFn: async (title: string) => {
+const { mutate } = useMutation({
+  mutationFn: async () => {
     const body = new FormData()
-    body.append('title', title)
+    body.append('title', title.value)
+    body.append('storage', storage.value)
 
     if (images.value.length > 0) {
       images.value.forEach((img) => {
@@ -103,23 +128,25 @@ const { mutate: createProject } = useMutation({
       body,
     })
 
-    return await response?.json()
-  },
+    const data = (await response?.json()) as IResponseWrapper<IProjectEntity>
 
-  onSuccess: (data: IResponseWrapper<void>) => {
-    queryClient.invalidateQueries({
-      queryKey: [EQueryKeys.ProjectsList],
-    })
+    if (response?.ok) {
+      if (data.message) addNotification('success', data.message)
 
-    if (data.message) addNotification('success', data.message)
+      queryClient.invalidateQueries({
+        queryKey: [EQueryKeys.ProjectsList],
+      })
 
-    shown.value = false
-    title.value = ''
-    removeAllFiles()
+      shown.value = false
+      title.value = ''
+      removeAllFiles()
+    } else {
+      if (data.error) error.value = data.error
+    }
+
+    return data
   },
 })
-
-const save = () => createProject(title.value)
 
 function removeFile(index: number) {
   const updated = images.value.filter((_, i) => i !== index) ?? []
@@ -173,6 +200,12 @@ function removeAllFiles() {
   .uw-text {
     text-align: center;
     font: var(--text-medium-16);
+  }
+
+  .inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
   }
 }
 </style>
