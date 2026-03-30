@@ -22,10 +22,6 @@
             <IconPlusCircle />
             {{ $t('general.optimize') }}
           </ButtonGeneral>
-          <ButtonGeneral>
-            <IconList />
-            {{ $t('general.optimizedImages') }}
-          </ButtonGeneral>
         </div>
       </div>
       <div class="filesystem">
@@ -54,7 +50,6 @@
 import ButtonGeneral from '@/components/_UI/buttons/ButtonGeneral.vue'
 import IconHome from '@/assets/icons/home.svg'
 import IconPlusCircle from '@/assets/icons/plus-circle.svg'
-import IconList from '@/assets/icons/list.svg'
 import ButtonRouterLink from '@/components/_UI/buttons/ButtonRouterLink.vue'
 import IconPencil from '@/assets/icons/pencil.svg'
 import IconDelete from '@/assets/icons/delete.svg'

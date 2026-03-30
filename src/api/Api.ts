@@ -59,4 +59,18 @@ export class Api {
   }
 
   private async handleErrorWithMessage(ctx: IQueryContext) {}
+
+  eventSource(path: string): EventSource {
+    let _path = path
+    if (_path.startsWith('/')) _path = _path.slice(1)
+    const eventSource = new EventSource(`${this.baseUrl}/${_path}`, {
+      withCredentials: true,
+    })
+
+    eventSource.addEventListener('error', () => {
+      eventSource.close()
+    })
+
+    return eventSource
+  }
 }

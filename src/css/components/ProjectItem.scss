@@ -2,7 +2,7 @@
 
 .project-item {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 0.5rem;
   background-color: var(--gray-100);
   border: 1px solid var(--gray-300);
@@ -14,14 +14,11 @@
   transition: var(--general-transition);
 
   .icons {
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     flex-wrap: wrap;
     gap: 0.625rem;
-  }
-
-  .name {
-    padding-block-start: 0.2rem;
   }
 
   .icon {
@@ -30,9 +27,33 @@
     aspect-ratio: 1;
   }
 
+  .name {
+    flex: 1 1 auto;
+    text-align: left;
+  }
+
+  .progress {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+
+    .loader {
+      --spinner-color: var(--primary-2);
+
+      width: max(1rem, 16px);
+      aspect-ratio: 1;
+      height: auto;
+    }
+  }
+
   &:hover {
     box-shadow: var(--shadow-2);
     background-color: var(--primary-1);
     border-color: var(--primary);
+  }
+
+  &:disabled {
+    pointer-events: none;
+    opacity: 0.5;
   }
 }

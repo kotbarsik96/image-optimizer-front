@@ -1,18 +1,27 @@
 <template>
-  <button class="project-item" type="button" @click="downloadZip">
+  <button class="project-item" type="button" :disabled="progressShown" @click="downloadZip">
     <span class="icons">
       <component v-for="icon in extensionIcons" :is="icon" class="icon" />
     </span>
-    <span class="name">{{ optimization.title }}</span>
+    <span class="name">
+      {{ optimization.title }}
+    </span>
+    <span v-if="progressShown" class="progress">
+      {{ currentProgress }}%
+      <SpinnerLoader />
+    </span>
   </button>
 </template>
 
 <script setup lang="ts">
+import SpinnerLoader from '@/components/_UI/SpinnerLoader.vue'
 import type { IOptimizationEntity } from '@/api/entities/Optimization/IOptimizationEntity'
 import type { IResponseWrapper } from '@/api/interfaces/IResponseWrapper'
 import { useApi } from '@/composables/useApi'
 import { useNotifications } from '@/composables/useNotifications'
+import { useProgress } from '@/composables/useProgress'
 import { supportedExtensions } from '@/interfaces/_General/EExtensions'
+import { EProgressActionName } from '@/interfaces/Progress/IProgress'
 import { computed } from 'vue'
 
 const props = defineProps<{
@@ -27,7 +36,15 @@ const extensionIcons = computed(() => {
   return props.optimization.extensions.split('|').map((ext) => supportedExtensions[ext]?.icon)
 })
 
+const { currentProgress } = useProgress(EProgressActionName.Optimizations, props.optimization.id)
+
+const progressShown = computed(
+  () => typeof currentProgress.value != 'undefined' && currentProgress.value < 100,
+)
+
 async function downloadZip() {
+  if (progressShown.value) return
+
   const response = await api.request(`/optimizations/archive/${props.optimization.id}`, {
     method: 'GET',
   })

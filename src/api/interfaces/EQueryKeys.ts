@@ -3,4 +3,6 @@ export enum EQueryKeys {
   ProjectsList = 'projects',
   Folder = 'folder',
   OptimizationsList = 'optimizations',
+  Progresses = 'progresses',
+  Progress = 'progress',
 }

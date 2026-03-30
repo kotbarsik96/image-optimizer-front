@@ -53,6 +53,10 @@ import { useMutation, useQueryClient } from '@tanstack/vue-query'
 import { ref, watch } from 'vue'
 import NumberInputGroup from '@/components/_UI/text-inputs/NumberInputGroup.vue'
 import ErrorText from '@/components/_UI/ErrorText.vue'
+import type { IOptimizationEntity } from '@/api/entities/Optimization/IOptimizationEntity'
+import { useProgressStore } from '@/stores/progressStore'
+import { EProgressActionName } from '@/interfaces/Progress/IProgress'
+import { EQueryKeys } from '@/api/interfaces/EQueryKeys'
 
 const props = defineProps<{
   project: IProjectEntity
@@ -68,12 +72,14 @@ const title = ref('')
 const extensions = ref<Array<string>>([])
 const sizes = ref([])
 
+const progressesStore = useProgressStore()
+const { newProgress } = progressesStore
+
 const error = ref('')
 watch(title, () => (error.value = ''))
 
 const { mutate, isPending } = useMutation({
   mutationFn: async () => {
-    console.log(sizes.value.join('|'), sizes.value)
     const response = await api.request(`/optimizations/start/${props.project.id}`, {
       method: 'POST',
       body: {
@@ -83,12 +89,17 @@ const { mutate, isPending } = useMutation({
       },
     })
 
-    const data = (await response?.json()) as IResponseWrapper<void>
+    const data = (await response?.json()) as IResponseWrapper<IOptimizationEntity>
 
     if (response?.ok) {
       if (data.message) addNotification('info', data.message)
       title.value = ''
       shown.value = false
+
+      queryClient.invalidateQueries({
+        queryKey: [EQueryKeys.OptimizationsList],
+      })
+      if (data.data?.id) newProgress(EProgressActionName.Optimizations, data.data.id)
     } else {
       if (data.error) error.value = data.error
     }
