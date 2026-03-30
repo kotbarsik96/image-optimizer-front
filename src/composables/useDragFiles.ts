@@ -36,6 +36,7 @@ export function useDragFiles(options: {
 
   function _onDrop(event: DragEvent) {
     isDragging.value = false
+    event.preventDefault()
     if (typeof options.onDrop == 'function') options.onDrop(event)
   }
 

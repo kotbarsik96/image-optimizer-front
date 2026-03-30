@@ -1,5 +1,7 @@
 <template>
   <div class="fs-wrapper">
+    <FsUploadArea v-if="currentFolderId" :folder-id="currentFolderId" />
+
     <div class="header">
       <div v-if="buttonsShown" class="buttons">
         <ButtonRouterLink
@@ -64,6 +66,7 @@ import FsUploadBtn from '@/components/Filesystem/Blocks/FsUploadBtn.vue'
 import type { IImageEntityBase } from '@/api/entities/Image/IImageEntityBase'
 import type { IImageUpload } from '@/api/entities/Image/IImageUpload'
 import FsNewFolderBtn from '@/components/Filesystem/Blocks/FsNewFolderBtn.vue'
+import FsUploadArea from '@/components/Filesystem/Blocks/FsUploadArea.vue'
 
 const props = defineProps<{
   rootFolderId?: number
@@ -169,6 +172,8 @@ function onFilesUploadEnd(images: IImageUpload[]) {
   padding: 1.25rem 2.5rem;
   border-radius: 12px;
   margin-block-start: 2.5rem;
+  position: relative;
+  overflow: hidden;
 
   .header {
     display: flex;
@@ -209,6 +214,7 @@ function onFilesUploadEnd(images: IImageUpload[]) {
   }
 
   .contents {
+    position: relative;
     display: flex;
     flex-wrap: wrap;
     gap: 2rem;

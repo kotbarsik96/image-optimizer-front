@@ -7,48 +7,14 @@
 </template>
 
 <script setup lang="ts">
-import type { IFolderEntity } from '@/api/entities/Folder/IFolderEntity'
-import type { IImageUpload } from '@/api/entities/Image/IImageUpload'
-import { EQueryKeys } from '@/api/interfaces/EQueryKeys'
-import type { IResponseWrapper } from '@/api/interfaces/IResponseWrapper'
 import IconPlusCircle from '@/assets/icons/plus-circle.svg'
-import { useApi } from '@/composables/useApi'
-import { useMutation, useQueryClient } from '@tanstack/vue-query'
+import { useUploadMutation } from '@/composables/useUpload'
 
 const props = defineProps<{
   folderId: number
 }>()
 
-const emit = defineEmits<{
-  // на будущее: загрузки нужно отображать в FilesystemWrapper. Необходимо учитывать, что после начала загрузки пользователь может перейти в другую папку, поэтому нужно привязывать загрузки к id папки
-  // (e: 'upload-start', folderId: number, files: File[]): void
-  // (e: 'upload-end', folderId: number, files: IImageUpload[]): void
-}>()
-
-const api = useApi()
-const queryClient = useQueryClient()
-
-const { mutate } = useMutation({
-  mutationFn: async (images: File[]) => {
-    const body = new FormData()
-    images.forEach((img) => body.append('images', img))
-
-    const response = await api.request(`/folders/upload/${props.folderId}`, {
-      method: 'POST',
-      body,
-    })
-
-    return (await response?.json()) as IResponseWrapper<{
-      folder: IFolderEntity
-      uploads: IImageUpload[]
-    }>
-  },
-  onSuccess: async ({ data }) => {
-    queryClient.invalidateQueries({
-      queryKey: [EQueryKeys.Folder, data?.folder.id],
-    })
-  },
-})
+const { mutate } = useUploadMutation(props.folderId)
 
 function onChange(event: Event) {
   const target = event.target as HTMLInputElement

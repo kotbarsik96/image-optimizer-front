@@ -14,18 +14,7 @@
           @keyup.enter="mutate"
         />
       </TextInputWrapper>
-      <div v-if="imagesPreview.length > 0" class="uploads">
-        <div class="u-title">{{ $t('project.filesToUpload') }}</div>
-        <div class="u-list">
-          <div v-for="(img, i) in imagesPreview" class="u-wrap">
-            <button class="uw-remove" type="button" @click="removeFile(i)">
-              <CloseIcon />
-            </button>
-            <img :src="img.src" :alt="img.alt" draggable="false" />
-            <div class="uw-text">{{ img.alt }}</div>
-          </div>
-        </div>
-      </div>
+      <FsUploadsList :title="$t('filesystem.filesToUpload')" v-model:files="_files" />
       <OptionsDropdown
         v-model="storage"
         :options="availableStoragesOptions"
@@ -50,7 +39,6 @@ import { vAutofocus } from '@/directives/vAutofocus'
 import { computed, ref, watch } from 'vue'
 import IconSave from '@/assets/icons/save.svg'
 import IconPencil from '@/assets/icons/pencil.svg'
-import CloseIcon from '@/assets/icons/close.svg'
 import ButtonGeneral from '@/components/_UI/buttons/ButtonGeneral.vue'
 import DialogWindow from '@/components/_UI/dialog/DialogWindow.vue'
 import TextInput from '@/components/_UI/text-inputs/TextInput.vue'
@@ -65,6 +53,7 @@ import ErrorText from '@/components/_UI/ErrorText.vue'
 import OptionsDropdown from '@/components/_UI/OptionsDropdown.vue'
 import { availableStorages, EStorage } from '@/enums/EStorage'
 import { useI18n } from 'vue-i18n'
+import FsUploadsList from '@/components/Filesystem/Blocks/FsUploadsList.vue'
 
 const props = defineProps<{
   files?: Array<File>
@@ -73,6 +62,15 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'update:files', files: Array<File>): void
 }>()
+
+const _files = computed({
+  get() {
+    return props.files
+  },
+  set(files: Array<File>) {
+    emit('update:files', files)
+  },
+})
 
 const { t } = useI18n()
 
@@ -103,13 +101,6 @@ const inputId = 'new-project-title'
 const images = computed(() => {
   return props.files?.filter((i) => i.type.startsWith('image')) ?? []
 })
-
-const imagesPreview = computed(() =>
-  images.value.map((i) => ({
-    src: URL.createObjectURL(i),
-    alt: i.name,
-  })),
-)
 
 const { mutate } = useMutation({
   mutationFn: async () => {
@@ -148,11 +139,6 @@ const { mutate } = useMutation({
   },
 })
 
-function removeFile(index: number) {
-  const updated = images.value.filter((_, i) => i !== index) ?? []
-  emit('update:files', updated)
-}
-
 function removeAllFiles() {
   emit('update:files', [])
 }
@@ -163,44 +149,6 @@ function removeAllFiles() {
 
 .np-dialog {
   --max-window-width: 400px;
-
-  .u-title {
-    font: var(--text-medium-21);
-    text-align: center;
-    padding-block: 1rem;
-  }
-
-  .u-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.625rem;
-  }
-
-  .u-wrap {
-    img {
-      width: 200px;
-      border-radius: 4px;
-    }
-  }
-
-  .uw-remove {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding-block: 0.25rem;
-
-    svg {
-      color: var(--text);
-      width: 1.5rem;
-      height: auto;
-      aspect-ratio: 1;
-    }
-  }
-
-  .uw-text {
-    text-align: center;
-    font: var(--text-medium-16);
-  }
 
   .inputs {
     display: flex;

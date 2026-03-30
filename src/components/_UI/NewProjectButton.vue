@@ -26,7 +26,6 @@ const droppedImages = ref<Array<File>>()
 const { isDragging } = useDragFiles({
   dropTarget: document.body,
   onDrop: (event) => {
-    event.preventDefault()
     const images = Array.from(event.dataTransfer?.files || []).filter((i) =>
       i.type.startsWith('image'),
     )
@@ -42,7 +41,7 @@ const icon = computed(() => {
 })
 
 const text = computed(() => {
-  return isDragging.value ? t('general.dropFilesHere') : t('general.newProject')
+  return isDragging.value ? t('general.dropImagesHere') : t('general.newProject')
 })
 
 const classes = computed(() => ({

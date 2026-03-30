@@ -8,7 +8,7 @@
     "save": "Сохранить",
     "cancel": "Отмена",
     "newProject": "Новый проект",
-    "dropFilesHere": "Перетащите изображения сюда",
+    "dropImagesHere": "Перетащите изображения сюда",
     "upload": "Загрузить",
     "newFolder": "Новая папка",
     "delete": "Удалить",
@@ -31,7 +31,6 @@
     "newProject": "Новый проект",
     "newProjectTitle": "Название (можно оставить пустым)",
     "listIsEmpty": "Список проектов пуст",
-    "filesToUpload": "Будут загружены файлы:",
     "newName": "Новое название",
     "doYouWantToRemove": "Удалить проект {0}?",
     "repeatIsIncorrect": "Текст не совпадает с названием проекта",
@@ -41,7 +40,8 @@
   "filesystem": {
     "goBack": "В предыдущую папку",
     "couldNotLoadContents": "Не удалось загрузить содержимое",
-    "folderName": "Название папки"
+    "folderName": "Название папки",
+    "filesToUpload": "Будут загружены файлы:"
   },
   "optimization": {
     "newOptimization": "Начать оптимизацию",
