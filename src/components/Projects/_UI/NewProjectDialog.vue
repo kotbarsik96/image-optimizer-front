@@ -14,7 +14,7 @@
           @keyup.enter="mutate"
         />
       </TextInputWrapper>
-      <FsUploadsList :title="$t('filesystem.filesToUpload')" v-model:files="_files" />
+      <FsUploadsList :title="$t('filesystem.filesToUpload')" v-model:files="newProjectFiles" />
       <OptionsDropdown
         v-model="storage"
         :options="availableStoragesOptions"
@@ -54,23 +54,8 @@ import OptionsDropdown from '@/components/_UI/OptionsDropdown.vue'
 import { availableStorages, EStorage } from '@/enums/EStorage'
 import { useI18n } from 'vue-i18n'
 import FsUploadsList from '@/components/Filesystem/Blocks/FsUploadsList.vue'
-
-const props = defineProps<{
-  files?: Array<File>
-}>()
-
-const emit = defineEmits<{
-  (e: 'update:files', files: Array<File>): void
-}>()
-
-const _files = computed({
-  get() {
-    return props.files
-  },
-  set(files: Array<File>) {
-    emit('update:files', files)
-  },
-})
+import { useDroppedFilesStore } from '@/stores/droppedFilesStore'
+import { storeToRefs } from 'pinia'
 
 const { t } = useI18n()
 
@@ -87,6 +72,9 @@ const storage = ref(EStorage.Local)
 const error = ref('')
 watch(title, () => (error.value = ''))
 
+const store = useDroppedFilesStore()
+const { newProjectFiles } = storeToRefs(store)
+
 const availableStoragesOptions = computed(() =>
   availableStorages.map((st) => ({
     label: t(`general.storages.${st}`),
@@ -98,18 +86,14 @@ const autofocusData = { shown }
 
 const inputId = 'new-project-title'
 
-const images = computed(() => {
-  return props.files?.filter((i) => i.type.startsWith('image')) ?? []
-})
-
 const { mutate } = useMutation({
   mutationFn: async () => {
     const body = new FormData()
     body.append('title', title.value)
     body.append('storage', storage.value)
 
-    if (images.value.length > 0) {
-      images.value.forEach((img) => {
+    if (newProjectFiles.value.length > 0) {
+      newProjectFiles.value.forEach((img) => {
         body.append('images', img)
       })
     }
@@ -140,7 +124,7 @@ const { mutate } = useMutation({
 })
 
 function removeAllFiles() {
-  emit('update:files', [])
+  newProjectFiles.value = []
 }
 </script>
 

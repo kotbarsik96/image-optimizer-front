@@ -1,12 +1,16 @@
-import { onMounted, onUnmounted, ref, toValue, type MaybeRefOrGetter } from 'vue'
+import { onMounted, onUnmounted, ref, toValue, type MaybeRefOrGetter, type Ref } from 'vue'
 
-export function useDragFiles(options: {
+export interface IDragFilesOptions {
   dropTarget: MaybeRefOrGetter<HTMLElement | null>
   onOver?: (event: DragEvent) => void
   onLeave?: (event: DragEvent) => void
   onDrop?: (event: DragEvent) => void
-}) {
+}
+
+export function useDragFiles(options: IDragFilesOptions) {
   const isDragging = ref(false)
+
+  let leaveTimeout: ReturnType<typeof setTimeout>
 
   onMounted(() => {
     const target = toValue(options.dropTarget)
@@ -29,6 +33,8 @@ export function useDragFiles(options: {
   })
 
   function _onOver(event: DragEvent) {
+    if (leaveTimeout) clearTimeout(leaveTimeout)
+
     event.preventDefault()
     isDragging.value = true
     if (typeof options.onOver == 'function') options.onOver(event)
@@ -41,8 +47,13 @@ export function useDragFiles(options: {
   }
 
   function _onLeave(event: DragEvent) {
-    isDragging.value = false
-    if (typeof options.onLeave == 'function') options.onLeave(event)
+    if (leaveTimeout) clearTimeout(leaveTimeout)
+
+    leaveTimeout = setTimeout(() => {
+      isDragging.value = false
+      event.preventDefault()
+      if (typeof options.onLeave == 'function') options.onLeave(event)
+    }, 250)
   }
 
   function windowDrop(event: DragEvent) {
@@ -55,4 +66,23 @@ export function useDragFiles(options: {
   return {
     isDragging,
   }
+}
+
+export function useImagesDragNDrop(options: IDragFilesOptions, filesRef: Ref<File[]>) {
+  const overrideOptions: IDragFilesOptions = {
+    onDrop: (event) => {
+      const images = Array.from(event.dataTransfer?.files || []).filter((i) =>
+        i.type.startsWith('image'),
+      )
+      if (images.length < 1) return
+
+      filesRef.value = images
+
+      if (typeof options.onDrop == 'function') options.onDrop(event)
+    },
+  } as IDragFilesOptions
+
+  const _options = Object.assign({ ...options }, overrideOptions)
+
+  return useDragFiles(_options)
 }

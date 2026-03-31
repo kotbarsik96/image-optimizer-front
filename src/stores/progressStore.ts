@@ -72,6 +72,9 @@ export const useProgressStore = defineStore('progress', () => {
       data.value = Number(Number(event.data).toFixed(2))
       if (data.value >= 100) finishProgress(actionName, actionId)
     })
+    data.eventSource.addEventListener('error', () => {
+      finishProgress(actionName, actionId)
+    })
   }
 
   /** вызывается, когда значение прогресса достигло 100: закрывает eventSource */

@@ -1,11 +1,11 @@
 <template>
   <div class="new-folder">
-    <button class="fs-block btn" type="button" @click="open">
-      <IconPlus class="img" />
+    <ButtonGeneral class="btn" type="button" @click="open">
+      <IconFolder class="img" />
       <span class="title">
         {{ $t('general.newFolder') }}
       </span>
-    </button>
+    </ButtonGeneral>
     <DialogWindow v-model="shown">
       <div class="dialog-title">{{ $t('general.newFolder') }}</div>
       <TextInputWrapper :input-id="inputId" :label="$t('filesystem.folderName')">
@@ -30,7 +30,7 @@ import { vAutofocus } from '@/directives/vAutofocus'
 import type { IFolderEntity } from '@/api/entities/Folder/IFolderEntity'
 import { EQueryKeys } from '@/api/interfaces/EQueryKeys'
 import type { IResponseWrapper } from '@/api/interfaces/IResponseWrapper'
-import IconPlus from '@/assets/icons/plus-circle.svg'
+import IconFolder from '@/assets/icons/folder-2.svg'
 import IconSave from '@/assets/icons/save.svg'
 import ButtonGeneral from '@/components/_UI/buttons/ButtonGeneral.vue'
 import DialogWindow from '@/components/_UI/dialog/DialogWindow.vue'
@@ -98,19 +98,4 @@ function open() {
 
 <style lang="scss" scoped>
 @use '@/css/mixins/mixins.scss';
-@use '@/css/components/FilesystemBlock.scss';
-
-.new-folder {
-  .btn {
-    cursor: pointer;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-
-    .img {
-      width: 2.5rem;
-      height: 2.5rem;
-    }
-  }
-}
 </style>

@@ -3,7 +3,7 @@
     <div class="dialog-title">
       {{ $t('general.upload') }}
     </div>
-    <FsUploadsList :title="$t('filesystem.filesToUpload')" v-model:files="_files" />
+    <FsUploadsList :title="$t('filesystem.filesToUpload')" v-model:files="uploadFolderFiles" />
     <div class="dialog-buttons">
       <ButtonGeneral button-style="primary" @click="upload">
         <IconSave />
@@ -22,36 +22,36 @@ import DialogWindow from '@/components/_UI/dialog/DialogWindow.vue'
 import IconSave from '@/assets/icons/save.svg'
 import FsUploadsList from '@/components/Filesystem/Blocks/FsUploadsList.vue'
 import { useUploadMutation } from '@/composables/useUpload'
-import { computed, watch } from 'vue'
+import { watch } from 'vue'
+import { useDroppedFilesStore } from '@/stores/droppedFilesStore'
+import { storeToRefs } from 'pinia'
 
 const model = defineModel<boolean>()
 
 const props = defineProps<{
-  files?: Array<File>
   folderId: number
 }>()
 
-const emit = defineEmits<{
-  (e: 'update:files', files: Array<File>): void
-}>()
+const store = useDroppedFilesStore()
+const { uploadFolderFiles } = storeToRefs(store)
 
-const _files = computed({
-  get() {
-    return props.files
+watch(
+  () => uploadFolderFiles.value.length,
+  (l) => {
+    if (l < 1) hideDialog()
   },
-  set(files: Array<File>) {
-    emit('update:files', files)
-  },
-})
+)
 
-watch(_files, () => {
-  if (!_files.value?.length) hideDialog()
-})
-
-const { mutate } = useUploadMutation(props.folderId)
+const { mutate } = useUploadMutation(() => props.folderId)
 
 async function upload() {
-  if (_files.value) mutate(_files.value)
+  if (uploadFolderFiles.value.length) {
+    mutate(uploadFolderFiles.value, {
+      onSuccess() {
+        hideDialog()
+      },
+    })
+  }
 }
 
 function hideDialog() {

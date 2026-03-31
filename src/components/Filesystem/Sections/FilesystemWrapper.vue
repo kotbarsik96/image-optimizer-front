@@ -1,9 +1,7 @@
 <template>
   <div class="fs-wrapper">
-    <FsUploadArea v-if="currentFolderId" :folder-id="currentFolderId" />
-
     <div class="header">
-      <div v-if="buttonsShown" class="buttons">
+      <div class="buttons">
         <ButtonRouterLink
           v-if="linkBack"
           class="--back"
@@ -12,27 +10,22 @@
         >
           <IconChevronDown />
         </ButtonRouterLink>
+
+        <FsUpload v-if="currentFolderId" :folder-id="currentFolderId" />
+
+        <FsNewFolderBtn v-if="currentFolderId" :folder-id="currentFolderId" />
       </div>
 
       <div class="path">{{ path }}</div>
     </div>
     <div v-if="folder" class="contents">
-      <FsUploadBtn
-        v-if="currentFolderId"
-        :folder-id="currentFolderId"
-        @upload-start="onFilesUploadStart"
-        @upload-end="onFilesUploadEnd"
-      />
-
-      <FsNewFolderBtn v-if="currentFolderId" :folder-id="currentFolderId" />
-
       <FsFolder
         v-for="nestedFolder in folder.nested"
         :key="nestedFolder.id"
         :folder="nestedFolder"
         :routeName="routeName"
       />
-      <FsImage v-for="image in imagesWithUploads" :key="image.id" :image="image" />
+      <FsImage v-for="image in folder.images" :key="image.id" :image="image" />
     </div>
 
     <div v-else-if="isPending" class="contents">
@@ -61,12 +54,8 @@ import { EQueryKeys } from '@/api/interfaces/EQueryKeys'
 import type { IResponseWrapper } from '@/api/interfaces/IResponseWrapper'
 import SkeletonItem from '@/components/_UI/SkeletonItem.vue'
 import SpinnerLoader from '@/components/_UI/SpinnerLoader.vue'
-
-import FsUploadBtn from '@/components/Filesystem/Blocks/FsUploadBtn.vue'
-import type { IImageEntityBase } from '@/api/entities/Image/IImageEntityBase'
-import type { IImageUpload } from '@/api/entities/Image/IImageUpload'
+import FsUpload from '@/components/Filesystem/Blocks/FsUpload.vue'
 import FsNewFolderBtn from '@/components/Filesystem/Blocks/FsNewFolderBtn.vue'
-import FsUploadArea from '@/components/Filesystem/Blocks/FsUploadArea.vue'
 
 const props = defineProps<{
   rootFolderId?: number
@@ -114,8 +103,6 @@ const isPending = computed(() => {
   return state
 })
 
-const pendingUploads = ref<IImageEntityBase[]>([])
-
 const folder = computed(() => data.value?.data)
 
 const path = computed(() => (folder.value?.path == '.' ? '/' : (folder.value?.path ?? '')))
@@ -133,35 +120,6 @@ const linkBack = computed(() => {
   }
   return link
 })
-
-const buttonsShown = computed(() => !!linkBack.value)
-
-const imagesWithUploads = computed(() => [...pendingUploads.value, ...(folder.value?.images ?? [])])
-
-async function onFilesUploadStart(files: File[]) {
-  pendingUploads.value = files
-    .filter((f) => f.name.startsWith('image/'))
-    .map((f) => {
-      const nameSplit = f.name.split('.')
-      const filename = nameSplit.slice(0, -1).join('.')
-      const extension = nameSplit.slice(-1).join('')
-
-      const imagesLength = folder.value?.images?.length ?? 0
-      const lastImage = folder.value?.images?.[imagesLength - 1]
-      const lastImageId = lastImage?.id ?? 0
-
-      return {
-        id: lastImageId + 1,
-        url: URL.createObjectURL(f),
-        extension,
-        filename,
-      }
-    })
-}
-
-function onFilesUploadEnd(images: IImageUpload[]) {
-  pendingUploads.value = []
-}
 </script>
 
 <style lang="scss" scoped>
@@ -195,7 +153,7 @@ function onFilesUploadEnd(images: IImageUpload[]) {
 
     .button {
       padding: 0;
-      width: 2rem;
+      width: 2.75rem;
       height: auto;
       aspect-ratio: 1;
 

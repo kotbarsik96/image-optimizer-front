@@ -1,47 +1,42 @@
 <template>
-  <div class="load-area" :class="classes">
-    <button class="la-button" @click="showDialog">
+  <div class="new-project" :class="classes">
+    <button class="np-button" @click="showDialog">
       <component :is="icon" />
-      {{ text }}
+      {{ $t('general.newProject') }}
     </button>
-    <NewProjectDialog v-model="dialogShown" v-model:files="droppedImages" />
+    <FsUploadOverlay :shown="isDragging" />
+    <NewProjectDialog v-model="dialogShown" />
   </div>
 </template>
 
 <script setup lang="ts">
 import IconPlus from '@/assets/icons/plus-circle.svg'
 import IconUpload from '@/assets/icons/upload.svg'
+import FsUploadOverlay from '@/components/Filesystem/_UI/FsUploadOverlay.vue'
 import NewProjectDialog from '@/components/Projects/_UI/NewProjectDialog.vue'
-import { useDragFiles } from '@/composables/useDragFiles'
+import { useImagesDragNDrop } from '@/composables/useDragFiles'
 import { useToggler } from '@/composables/useToggler'
-import { computed, ref } from 'vue'
-import { useI18n } from 'vue-i18n'
-
-const { t } = useI18n()
+import { useDroppedFilesStore } from '@/stores/droppedFilesStore'
+import { storeToRefs } from 'pinia'
+import { computed } from 'vue'
 
 const { isShown: dialogShown, show: showDialog } = useToggler()
 
-const droppedImages = ref<Array<File>>()
+const store = useDroppedFilesStore()
+const { newProjectFiles } = storeToRefs(store)
 
-const { isDragging } = useDragFiles({
-  dropTarget: document.body,
-  onDrop: (event) => {
-    const images = Array.from(event.dataTransfer?.files || []).filter((i) =>
-      i.type.startsWith('image'),
-    )
-    if (images.length < 1) return
-
-    droppedImages.value = images
-    dialogShown.value = true
+const { isDragging } = useImagesDragNDrop(
+  {
+    dropTarget: document.body,
+    onDrop() {
+      dialogShown.value = true
+    },
   },
-})
+  newProjectFiles,
+)
 
 const icon = computed(() => {
   return isDragging.value ? IconUpload : IconPlus
-})
-
-const text = computed(() => {
-  return isDragging.value ? t('general.dropImagesHere') : t('general.newProject')
 })
 
 const classes = computed(() => ({
@@ -52,12 +47,12 @@ const classes = computed(() => ({
 <style lang="scss" scoped>
 @use '@/css/mixins/mixins.scss';
 
-.load-area {
+.new-project {
   width: 200px;
   height: auto;
   aspect-ratio: 1;
 
-  .la-button {
+  .np-button {
     cursor: pointer;
     border-radius: 8px;
     background-color: var(--gray-100);
@@ -81,8 +76,8 @@ const classes = computed(() => ({
     }
   }
 
-  .la-button:hover,
-  &.--drop .la-button {
+  .np-button:hover,
+  &.--drop .np-button {
     border-color: var(--primary);
     background-color: var(--primary);
     box-shadow: var(--shadow-2);
