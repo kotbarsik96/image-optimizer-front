@@ -3,8 +3,8 @@
     <div class="_container">
       <div class="header">
         <div class="_page-title">
-          <div class="_pt-inner">
-            <h1 class="_h1">{{ $t('general.project') }}: "{{ project?.title }}"</h1>
+          <div v-if="project" class="_pt-inner">
+            <h1 class="_h1 pt-text">{{ $t('general.project') }}: "{{ project.title }}"</h1>
             <button class="pt-button" type="button" @click="nameDialogOpen = true">
               <IconPencil />
             </button>
@@ -12,6 +12,11 @@
               <IconDelete />
             </button>
           </div>
+          <SkeletonItem v-else-if="isPending" />
+        </div>
+        <div class="storage-type">
+          <div v-if="storageType" class="text">{{ storageType }}</div>
+          <SkeletonItem v-else-if="isPending" />
         </div>
         <div class="buttons">
           <ButtonRouterLink :to="{ name: 'HomePage' }" button-style="primary-1">
@@ -65,6 +70,10 @@ import { EQueryKeys } from '@/api/interfaces/EQueryKeys'
 import DeleteProjectDialog from '@/components/Projects/_UI/DeleteProjectDialog.vue'
 import OptimizationStartDialog from '@/components/Optimizations/_UI/OptimizationStartDialog.vue'
 import OptimizationsList from '@/components/Optimizations/Sections/OptimizationsList.vue'
+import { useI18n } from 'vue-i18n'
+import SkeletonItem from '@/components/_UI/SkeletonItem.vue'
+
+const { t } = useI18n()
 
 const api = useApi()
 
@@ -87,13 +96,51 @@ const { data, isPending } = useQuery<IResponseWrapper<IProjectEntity>>({
   },
 })
 
+const test = ref(false)
+
 const project = computed(() => data.value?.data)
+const rootFolder = computed(() => project.value?.root_folder)
+const storageType = computed(() => {
+  if (!rootFolder.value) return undefined
+  return `${t('general.storageType')}: ${t(`general.storages.${rootFolder.value?.storage}`)}`
+})
 </script>
 
 <style lang="scss" scoped>
 @use '@/css/mixins/mixins.scss';
 
 .project {
+  .header {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .storage-type {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .text {
+      color: var(--text);
+      font: var(--text-h3);
+      text-align: center;
+      min-height: 2rem;
+    }
+
+    .skeleton {
+      width: 20rem;
+      height: 2rem;
+    }
+  }
+
+  ._page-title {
+    .skeleton {
+      width: 46rem;
+      height: 5.25rem;
+    }
+  }
+
   .pt-button {
     width: 2rem;
     height: auto;
@@ -110,7 +157,6 @@ const project = computed(() => data.value?.data)
     display: flex;
     align-items: center;
     gap: 1.25rem;
-    margin-block-start: 2.5rem;
   }
 
   .p-opts {

@@ -1,4 +1,5 @@
 import type { IImageEntity } from '@/api/entities/Image/IImageEntity'
+import type { EStorage } from '@/enums/EStorage'
 
 export interface IFolderEntity {
   id: number
@@ -8,6 +9,7 @@ export interface IFolderEntity {
   parent_id?: number
   nested?: IFolderEntity[]
   images?: IImageEntity[]
+  storage: EStorage
   created_at: string
   updated_at: string
 }

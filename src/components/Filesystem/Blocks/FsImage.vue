@@ -1,19 +1,24 @@
 <template>
-  <div class="fs-image fs-block">
-    <img class="img" :src="image.url" :alt="image.filename" />
+  <div class="fs-image fs-block" tabindex="0" ref="element">
+    <img class="img" :src="src" :alt="image.filename" />
     <div class="title">{{ title }}</div>
+    <ImageContextMenu v-if="image" :image="image" />
   </div>
 </template>
 
 <script setup lang="ts">
-import type { IImageEntityBase } from '@/api/entities/Image/IImageEntityBase'
+import IconPlaceholder from '@/assets/icons/image.svg?url'
 import { computed } from 'vue'
+import ImageContextMenu from '@/components/_UI/context-menu/ImageContextMenu.vue'
+import type { IImageEntity } from '@/api/entities/Image/IImageEntity'
 
 const props = defineProps<{
-  image: IImageEntityBase
+  image: IImageEntity
 }>()
 
 const title = computed(() => `${props.image.filename}.${props.image.extension}`)
+
+const src = computed(() => props.image.url || IconPlaceholder)
 </script>
 
 <style lang="scss" scoped>

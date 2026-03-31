@@ -10,7 +10,7 @@
 .skeleton {
   width: 100%;
   height: 50px;
-  border-radius: var(--b-radius-sm) var(--b-radius-big) var(--b-radius-sm) var(--b-radius-big);
+  border-radius: var(--ui-border-radius);
   animation: skeleton-loading 1s linear infinite alternate;
 }
 

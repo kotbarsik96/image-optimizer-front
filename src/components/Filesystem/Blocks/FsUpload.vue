@@ -1,6 +1,6 @@
 <template>
   <div class="upload" :class="classes">
-    <label class="button upload" :disabled="disabled">
+    <label class="button upload-btn" :disabled="disabled">
       <input type="file" ref="uploadInputElement" multiple @change="onChange" />
       <span>
         <IconPlusCircle class="img" />
@@ -72,6 +72,10 @@ function onChange(event: Event) {
 @use '@/css/components/Button.scss';
 
 .upload {
+  .upload-btn {
+    cursor: pointer;
+  }
+
   input {
     display: none;
   }
