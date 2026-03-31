@@ -39,7 +39,7 @@ const props = withDefaults(
 )
 
 const store = useDroppedFilesStore()
-const { uploadFolderFiles } = storeToRefs(store)
+const { folderImageFiles } = storeToRefs(store)
 
 const { isDragging } = useImagesDragNDrop(
   {
@@ -48,7 +48,7 @@ const { isDragging } = useImagesDragNDrop(
       dialogShown.value = true
     },
   },
-  uploadFolderFiles,
+  folderImageFiles,
 )
 
 const dialogShown = ref(false)
@@ -61,7 +61,7 @@ function onChange(event: Event) {
   const target = event.target as HTMLInputElement
   const images = Array.from(target.files ?? []).filter((f) => f.type.startsWith('image/'))
   if (images.length > 0) {
-    uploadFolderFiles.value = images
+    folderImageFiles.value = images
     dialogShown.value = true
   }
 }

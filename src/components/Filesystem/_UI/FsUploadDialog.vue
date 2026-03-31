@@ -3,7 +3,7 @@
     <div class="dialog-title">
       {{ $t('general.upload') }}
     </div>
-    <FsUploadsList :title="$t('filesystem.filesToUpload')" v-model:files="uploadFolderFiles" />
+    <FsUploadsList :title="$t('filesystem.filesToUpload')" v-model:files="folderImageFiles" />
     <div class="dialog-buttons">
       <ButtonGeneral button-style="primary" @click="upload">
         <IconSave />
@@ -33,10 +33,10 @@ const props = defineProps<{
 }>()
 
 const store = useDroppedFilesStore()
-const { uploadFolderFiles } = storeToRefs(store)
+const { folderImageFiles } = storeToRefs(store)
 
 watch(
-  () => uploadFolderFiles.value.length,
+  () => folderImageFiles.value.length,
   (l) => {
     if (l < 1) hideDialog()
   },
@@ -45,8 +45,8 @@ watch(
 const { mutate } = useUploadMutation(() => props.folderId)
 
 async function upload() {
-  if (uploadFolderFiles.value.length) {
-    mutate(uploadFolderFiles.value, {
+  if (folderImageFiles.value.length) {
+    mutate(folderImageFiles.value, {
       onSuccess() {
         hideDialog()
       },

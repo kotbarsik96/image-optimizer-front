@@ -23,7 +23,7 @@ import { computed } from 'vue'
 const { isShown: dialogShown, show: showDialog } = useToggler()
 
 const store = useDroppedFilesStore()
-const { newProjectFiles } = storeToRefs(store)
+const { newProjectImageFiles } = storeToRefs(store)
 
 const { isDragging } = useImagesDragNDrop(
   {
@@ -32,7 +32,7 @@ const { isDragging } = useImagesDragNDrop(
       dialogShown.value = true
     },
   },
-  newProjectFiles,
+  newProjectImageFiles,
 )
 
 const icon = computed(() => {

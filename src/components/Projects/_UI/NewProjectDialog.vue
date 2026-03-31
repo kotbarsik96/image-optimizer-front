@@ -14,7 +14,7 @@
           @keyup.enter="mutate"
         />
       </TextInputWrapper>
-      <FsUploadsList :title="$t('filesystem.filesToUpload')" v-model:files="newProjectFiles" />
+      <FsUploadsList :title="$t('filesystem.filesToUpload')" v-model:files="newProjectImageFiles" />
       <OptionsDropdown
         v-model="storage"
         :options="availableStoragesOptions"
@@ -73,7 +73,7 @@ const error = ref('')
 watch(title, () => (error.value = ''))
 
 const store = useDroppedFilesStore()
-const { newProjectFiles } = storeToRefs(store)
+const { newProjectImageFiles } = storeToRefs(store)
 
 const availableStoragesOptions = computed(() =>
   availableStorages.map((st) => ({
@@ -92,8 +92,8 @@ const { mutate } = useMutation({
     body.append('title', title.value)
     body.append('storage', storage.value)
 
-    if (newProjectFiles.value.length > 0) {
-      newProjectFiles.value.forEach((img) => {
+    if (newProjectImageFiles.value.length > 0) {
+      newProjectImageFiles.value.forEach((img) => {
         body.append('images', img)
       })
     }
@@ -124,7 +124,7 @@ const { mutate } = useMutation({
 })
 
 function removeAllFiles() {
-  newProjectFiles.value = []
+  newProjectImageFiles.value = []
 }
 </script>
 
