@@ -5,22 +5,21 @@ import type { TMiddleware, TQueryDelegate } from '@/api/interfaces/TMiddleware'
 import { fetchMiddleware } from '@/api/middlewares/fetchMiddleware'
 import { initHeadersMiddleware } from '@/api/middlewares/initHeadersMiddleware'
 import { retryMiddlewareBuilder, simpleRetryStrategy } from '@/api/middlewares/retryMiddleware'
-import type { ServerStatuses } from '@/api/ServerStatuses'
-import { useNotifications } from '@/composables/useNotifications'
+import { type INotificationsComposable } from '@/composables/useNotifications'
 
 export class Api {
-  private notifications: ReturnType<typeof useNotifications>
   private middlewares: TMiddleware[]
 
-  constructor(private baseUrl: string) {
+  constructor(
+    private baseUrl: string,
+    private notifications: INotificationsComposable,
+  ) {
     if (this.baseUrl.endsWith('/')) this.baseUrl = this.baseUrl.slice(0, -1)
     this.middlewares = [
       retryMiddlewareBuilder(simpleRetryStrategy()),
       initHeadersMiddleware,
       fetchMiddleware,
     ]
-
-    this.notifications = useNotifications()
   }
 
   async request(

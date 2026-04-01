@@ -1,10 +1,11 @@
 import { inject, type App } from 'vue'
 import { Api } from '@/api/Api'
+import { useNotifications } from '@/composables/useNotifications'
 
 const API_KEY = Symbol('api')
 
 export function provideApi(app: App): Api {
-  const api = new Api(import.meta.env.VITE_API_URL)
+  const api = new Api(import.meta.env.VITE_API_URL, useNotifications())
   app.provide(API_KEY, api)
   return api
 }
