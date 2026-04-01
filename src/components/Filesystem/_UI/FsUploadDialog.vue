@@ -5,7 +5,7 @@
     </div>
     <FsUploadsList :title="$t('filesystem.filesToUpload')" v-model:files="folderImageFiles" />
     <div class="dialog-buttons">
-      <ButtonGeneral button-style="primary" @click="upload">
+      <ButtonGeneral :is-loading="isPending" button-style="primary" @click="upload">
         <IconSave />
         {{ $t('general.save') }}
       </ButtonGeneral>
@@ -42,7 +42,7 @@ watch(
   },
 )
 
-const { mutate } = useUploadMutation(() => props.folderId)
+const { mutate, isPending } = useUploadMutation(() => props.folderId)
 
 async function upload() {
   if (folderImageFiles.value.length) {

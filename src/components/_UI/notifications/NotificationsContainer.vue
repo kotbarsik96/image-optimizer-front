@@ -8,9 +8,10 @@
 
 <script setup lang="ts">
 import NotificationItem from '@/components/_UI/notifications/NotificationItem.vue'
-import { useNotifications } from '@/composables/useNotifications'
+import { useNotificationsStore } from '@/stores/notificationsStore'
 
-const { getNotificationsList } = useNotifications()
+const store = useNotificationsStore()
+const { getNotificationsList } = store
 
 const notifications = getNotificationsList()
 </script>

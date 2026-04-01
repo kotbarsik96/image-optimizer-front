@@ -49,7 +49,8 @@
     "deleteImage": "Удалить изображение {0}?",
     "newImageName": "Новое название изображения",
     "couldNotLoadImage": "Не удалось загрузить изображение",
-    "imageLoadingMoreThanExpected": "Ожидание: оригинал изображения загружается дольше обычного..."
+    "imageLoadingMoreThanExpected": "Ожидание: оригинал изображения загружается дольше обычного...",
+    "imageOpenedInNewTab": "Изображение открыто в новой вкладке"
   },
   "optimization": {
     "newOptimization": "Начать оптимизацию",

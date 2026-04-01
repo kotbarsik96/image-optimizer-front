@@ -23,7 +23,7 @@
     </div>
     <ErrorText :error="error" />
     <div class="dialog-buttons">
-      <ButtonGeneral button-style="primary" @click="mutate">
+      <ButtonGeneral :is-loading="isPending" button-style="primary" @click="mutate">
         <IconSave />
         {{ $t('general.save') }}
       </ButtonGeneral>
@@ -86,7 +86,7 @@ const autofocusData = { shown }
 
 const inputId = 'new-project-title'
 
-const { mutate } = useMutation({
+const { mutate, isPending } = useMutation({
   mutationFn: async () => {
     const body = new FormData()
     body.append('title', title.value)

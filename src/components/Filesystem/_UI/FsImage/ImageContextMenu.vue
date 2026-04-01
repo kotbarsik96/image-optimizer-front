@@ -54,7 +54,7 @@ const props = defineProps<{
   image: IImageEntity
 }>()
 
-const { addNotification, removeNotification } = useNotifications()
+const { addNotification } = useNotifications()
 
 const shown = ref(false)
 
@@ -64,14 +64,15 @@ const { t } = useI18n()
 
 const openOriginal = async () => {
   let url = props.image.url
+  const newTab = window.open('', '_blank')
 
   switch (props.image.storage) {
     case EStorage.Local:
       try {
         // если getImagePreviewUrl выполняется довольно долго - указать в нотификации о загрузке
-        let notificationId: string | undefined
+        let removeNotification: (() => void) | undefined
         const timeout = setTimeout(() => {
-          notificationId = addNotification(
+          removeNotification = addNotification(
             'info',
             t('filesystem.imageLoadingMoreThanExpected'),
             60000,
@@ -80,7 +81,10 @@ const openOriginal = async () => {
         url = await getImagePreviewUrl(api, props.image.id)
         // изображение загрузилось - убрать нотификацию, если она была
         clearTimeout(timeout)
-        if (notificationId) removeNotification(notificationId)
+        if (typeof removeNotification === 'function') {
+          removeNotification()
+          addNotification('info', t('filesystem.imageOpenedInNewTab'))
+        }
       } catch (error: any) {
         addNotification('error', error.message)
       }
@@ -90,7 +94,7 @@ const openOriginal = async () => {
       break
   }
 
-  window.open(url, '_blank')
+  if (newTab) newTab.location.href = url
 }
 
 const previewDialogShown = ref(false)
