@@ -1,5 +1,5 @@
 import { computed, ref } from 'vue'
-import type INotification from '@/interfaces/Notification/INotification'
+import type { INotification } from '@/interfaces/Notification/INotification'
 import type { NotificationSeverity } from '@/interfaces/Notification/NotificationSeverity'
 import { useTimer } from '@/composables/useTimer'
 
@@ -13,13 +13,16 @@ export function useNotifications() {
       (item) => Date.now() < item.createdAt.getTime() + item.holdTime,
     )
 
+    const id = self.crypto.randomUUID()
     notifications.value.push({
-      id: self.crypto.randomUUID(),
+      id,
       severity,
       content,
       createdAt: new Date(),
       holdTime: holdTime || _default_notification_hold_time,
     })
+
+    return id
   }
   function getNotificationsList() {
     const { timeSource } = useTimer()

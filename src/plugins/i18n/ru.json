@@ -44,7 +44,9 @@
     "filesToUpload": "Будут загружены файлы:",
     "renameImage": "Переименовать изображение {0}",
     "deleteImage": "Удалить изображение {0}?",
-    "newImageName": "Новое название изображения"
+    "newImageName": "Новое название изображения",
+    "couldNotLoadImage": "Не удалось загрузить изображение",
+    "imageLoadingMoreThanExpected": "Ожидание: оригинал изображения загружается дольше обычного..."
   },
   "optimization": {
     "newOptimization": "Начать оптимизацию",

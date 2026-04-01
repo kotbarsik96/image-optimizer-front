@@ -5,4 +5,5 @@ export enum EQueryKeys {
   OptimizationsList = 'optimizations',
   Progresses = 'progresses',
   Progress = 'progress',
+  ImagePreview = 'image-preview',
 }
