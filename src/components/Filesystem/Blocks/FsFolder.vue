@@ -2,12 +2,14 @@
   <RouterLink class="fs-folder fs-block" :to="link">
     <IconFolder class="img" />
     <div class="title">{{ folderTitle }}</div>
+    <FolderContextMenu :folder="folder" @click.prevent.stop />
   </RouterLink>
 </template>
 
 <script setup lang="ts">
 import type { IFolderEntity } from '@/api/entities/Folder/IFolderEntity'
 import IconFolder from '@/assets/icons/folder.svg'
+import FolderContextMenu from '@/components/Filesystem/_UI/FsFolder/FolderContextMenu.vue'
 import { computed } from 'vue'
 
 const props = defineProps<{

@@ -14,7 +14,7 @@
       <ButtonGeneral :disabled="isDisabled" :is-loading="isPending" @click="deleteProject">
         {{ $t('general.delete') }}
       </ButtonGeneral>
-      <ButtonGeneral button-style="error" :is-loading="isPending" @click="close">
+      <ButtonGeneral button-style="error" @click="close">
         {{ $t('general.cancel') }}
       </ButtonGeneral>
     </div>

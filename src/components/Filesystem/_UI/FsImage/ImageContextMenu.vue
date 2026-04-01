@@ -40,15 +40,12 @@ import IconRename from '@/assets/icons/pencil.svg'
 import IconInfo from '@/assets/icons/info.svg'
 import IconDelete from '@/assets/icons/delete.svg'
 import FsImageRenameDialog from '@/components/Filesystem/_UI/FsImage/FsImageRenameDialog.vue'
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import FsImageDeleteDialog from '@/components/Filesystem/_UI/FsImage/FsImageDeleteDialog.vue'
 import type { IImageEntity } from '@/api/entities/Image/IImageEntity'
 import ImagePreviewDialog from '@/components/_UI/ImagePreviewDialog.vue'
 import { EStorage } from '@/enums/EStorage'
-import {
-  getImagePreviewUrl,
-  useImagePreviewQuery,
-} from '@/composables/queries/useImagePreviewQuery'
+import { getImagePreviewUrl } from '@/composables/queries/useImagePreviewQuery'
 import { useNotifications } from '@/composables/useNotifications'
 import { useApi } from '@/composables/useApi'
 import { useI18n } from 'vue-i18n'

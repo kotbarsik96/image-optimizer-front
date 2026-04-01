@@ -17,7 +17,7 @@
           <IconSave />
           {{ $t('general.save') }}
         </ButtonGeneral>
-        <ButtonGeneral :is-loading="isPending" button-style="error" @click="close">
+        <ButtonGeneral button-style="error" @click="close">
           {{ $t('general.cancel') }}
         </ButtonGeneral>
       </div>

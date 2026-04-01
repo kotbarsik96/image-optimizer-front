@@ -9,7 +9,7 @@
 <script setup lang="ts">
 import IconPlaceholder from '@/assets/icons/image.svg?url'
 import { computed } from 'vue'
-import ImageContextMenu from '@/components/_UI/context-menu/ImageContextMenu.vue'
+import ImageContextMenu from '@/components/Filesystem/_UI/FsImage/ImageContextMenu.vue'
 import type { IImageEntity } from '@/api/entities/Image/IImageEntity'
 
 const props = defineProps<{

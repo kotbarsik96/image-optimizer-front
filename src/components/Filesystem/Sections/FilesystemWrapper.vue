@@ -3,10 +3,10 @@
     <div class="header">
       <div class="buttons">
         <ButtonRouterLink
-          v-if="linkBack"
           class="--back"
           :aria-label="$t('filesystem.goBack')"
-          :to="linkBack"
+          :to="linkBack ?? { name: 'HomePage' }"
+          :disabled="!linkBack"
         >
           <IconChevronDown />
         </ButtonRouterLink>
@@ -56,6 +56,7 @@ import SkeletonItem from '@/components/_UI/SkeletonItem.vue'
 import SpinnerLoader from '@/components/_UI/SpinnerLoader.vue'
 import FsUpload from '@/components/Filesystem/Blocks/FsUpload.vue'
 import FsNewFolderBtn from '@/components/Filesystem/Blocks/FsNewFolderBtn.vue'
+import ButtonGeneral from '@/components/_UI/buttons/ButtonGeneral.vue'
 
 const props = defineProps<{
   rootFolderId?: number

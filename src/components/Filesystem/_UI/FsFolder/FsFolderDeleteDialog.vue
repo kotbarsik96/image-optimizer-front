@@ -1,7 +1,7 @@
 <template>
   <DialogWindow class="delete-img" v-model="shown">
     <div class="dialog-title">
-      {{ $t('filesystem.deleteImage', [`${image.filename}.${image.extension}`]) }}
+      {{ $t('filesystem.deleteFolder', [folder.path]) }}
     </div>
     <div class="dialog-buttons">
       <ButtonGeneral :is-loading="isPending" @click="mutate">
@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import type { IImageEntity } from '@/api/entities/Image/IImageEntity'
+import type { IFolderEntity } from '@/api/entities/Folder/IFolderEntity'
 import { EQueryKeys } from '@/api/interfaces/EQueryKeys'
 import type { IResponseWrapper } from '@/api/interfaces/IResponseWrapper'
 import ButtonGeneral from '@/components/_UI/buttons/ButtonGeneral.vue'
@@ -28,7 +28,7 @@ const shown = defineModel<boolean>()
 const hide = () => (shown.value = false)
 
 const props = defineProps<{
-  image: IImageEntity
+  folder: IFolderEntity
 }>()
 
 const { addNotification } = useNotifications()
@@ -38,7 +38,7 @@ const queryClient = useQueryClient()
 
 const { mutate, isPending } = useMutation({
   mutationFn: async () => {
-    const response = await api.request(`/images/${props.image.id}`, {
+    const response = await api.request(`/folders/${props.folder.id}`, {
       method: 'DELETE',
     })
 
@@ -50,7 +50,7 @@ const { mutate, isPending } = useMutation({
       if (data?.message) addNotification('info', data.message)
 
       queryClient.invalidateQueries({
-        queryKey: [EQueryKeys.Folder, props.image.folder_id],
+        queryKey: [EQueryKeys.Folder, props.folder.parent_id],
       })
     } else {
       if (data.error) addNotification('error', data.error)
