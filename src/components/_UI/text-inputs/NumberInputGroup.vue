@@ -7,7 +7,13 @@
         :input-id="`${inputsId}-${i}`"
         :label="getLabel(i)"
       >
-        <NumberInput v-model="model[i - 1]" :id="`${inputsId}-${i}`" :min="0" :max="100" />
+        <NumberInput
+          v-model="model[i - 1]"
+          :id="`${inputsId}-${i}`"
+          :min="0"
+          :max="100"
+          placeholder="50"
+        />
         <ButtonGeneral
           v-if="i !== 1"
           class="ir-button --delete"
