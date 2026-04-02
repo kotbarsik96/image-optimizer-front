@@ -13,6 +13,7 @@
           :min="0"
           :max="100"
           placeholder="50"
+          autocomplete="off"
         />
         <ButtonGeneral
           v-if="i !== 1"
