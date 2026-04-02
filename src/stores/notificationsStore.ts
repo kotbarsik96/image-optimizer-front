@@ -5,16 +5,20 @@ import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 
 const _default_notification_hold_time = 7500
+const _notifications_garbage_collector_interval = 10000
 const _max_notifications = 10
 
 export const useNotificationsStore = defineStore('notifications', () => {
   const notifications = ref<INotification[]>([])
 
-  function addNotification(severity: NotificationSeverity, content: string, holdTime?: number) {
-    // notifications.value = notifications.value.filter(
-    //   (item) => Date.now() < item.createdAt.getTime() + item.holdTime,
-    // )
+  setInterval(() => {
+    const now = Date.now()
+    notifications.value = notifications.value.filter(
+      (n) => now < n.createdAt.getTime() + n.holdTime,
+    )
+  }, _notifications_garbage_collector_interval)
 
+  function addNotification(severity: NotificationSeverity, content: string, holdTime?: number) {
     const id = self.crypto.randomUUID()
     notifications.value.push({
       id,
@@ -23,7 +27,6 @@ export const useNotificationsStore = defineStore('notifications', () => {
       createdAt: new Date(),
       holdTime: holdTime || _default_notification_hold_time,
     })
-
     return id
   }
 
