@@ -5,6 +5,7 @@ export type TNotificationID = string | ReturnType<typeof self.crypto.randomUUID>
 
 export interface INotificationsComposable {
   addNotification(severity: NotificationSeverity, content: string, holdTime?: number): () => void
+  removeNotification(id: TNotificationID): void
 }
 
 export function useNotifications(): INotificationsComposable {
@@ -16,5 +17,9 @@ export function useNotifications(): INotificationsComposable {
     return () => storeRemove(id)
   }
 
-  return { addNotification }
+  function removeNotification(id: TNotificationID) {
+    storeRemove(id)
+  }
+
+  return { addNotification, removeNotification }
 }
