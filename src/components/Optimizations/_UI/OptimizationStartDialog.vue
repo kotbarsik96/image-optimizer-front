@@ -55,8 +55,8 @@ import NumberInputGroup from '@/components/_UI/text-inputs/NumberInputGroup.vue'
 import ErrorText from '@/components/_UI/ErrorText.vue'
 import type { IOptimizationEntity } from '@/api/entities/Optimization/IOptimizationEntity'
 import { useProgressStore } from '@/stores/progressStore'
-import { EProgressActionName } from '@/interfaces/Progress/IProgress'
 import { EQueryKeys } from '@/api/interfaces/EQueryKeys'
+import { EProgressEntityName } from '@/interfaces/Progress/IProgress'
 
 const props = defineProps<{
   project: IProjectEntity
@@ -73,7 +73,7 @@ const extensions = ref<Array<string>>([])
 const sizes = ref([])
 
 const progressesStore = useProgressStore()
-const { newProgress } = progressesStore
+const { startListenProgress } = progressesStore
 
 const error = ref('')
 watch(title, () => (error.value = ''))
@@ -99,7 +99,7 @@ const { mutate, isPending } = useMutation({
       queryClient.invalidateQueries({
         queryKey: [EQueryKeys.OptimizationsList],
       })
-      if (data.data?.id) newProgress(EProgressActionName.Optimizations, data.data.id)
+      if (data.data?.id) startListenProgress(EProgressEntityName.Optimizations, data.data)
     } else {
       if (data.error) error.value = data.error
     }

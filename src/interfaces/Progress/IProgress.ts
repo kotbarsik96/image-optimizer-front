@@ -1,17 +1,31 @@
-export enum EProgressActionName {
+export enum EProgressEntityName {
   Optimizations = 'optimizations',
+  Uploads = 'uploads',
 }
 
-export type TProgressActions = Record<EProgressActionName, TActionProgresses>
+export enum EProgressStatus {
+  ProgressCreated = 1,
+  ProgressPending,
+  ProgressDone,
+}
 
-export type TActionProgresses = Record<
-  number,
-  {
-    eventSource?: EventSource
-    value: number
-  }
->
+export interface IProgressEntity {
+  id: number
+  progress_status: EProgressStatus
+}
 
-export type TProgressActionsRaw = Record<EProgressActionName, TActionProgressesRaw>
+export type TProgressDetails = Record<string, TProgressDetailItem>
 
-export type TActionProgressesRaw = Record<number, number>
+export type TProgressDetailItem = {
+  error?: string
+  done: boolean
+  meta: Record<string, any>
+}
+
+export type TProgressSource = {
+  entityName: EProgressEntityName
+  entity: IProgressEntity
+  eventSource: EventSource
+  value: number
+  details: TProgressDetails
+}
