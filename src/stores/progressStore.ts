@@ -1,5 +1,4 @@
 import { useApi } from '@/composables/useApi'
-import { useNotifications } from '@/composables/useNotifications'
 import {
   EProgressStatus,
   type EProgressEntityName,
@@ -7,60 +6,63 @@ import {
   type TProgressSource,
 } from '@/interfaces/Progress/IProgress'
 import { defineStore } from 'pinia'
-import { shallowRef } from 'vue'
+import { computed, ref, shallowRef, type Ref } from 'vue'
 
 export const useProgressStore = defineStore('progress', () => {
   const api = useApi()
 
-  const progresses = shallowRef<TProgressSource[]>([])
+  const progresses = shallowRef<Ref<TProgressSource>[]>([])
 
+  /** зарегистрировать слушатель SSE, если статус === ProgressPending. Если уже зарегистрирован - просто вернёт существующий */
   function startListenProgress(entityName: EProgressEntityName, entity: IProgressEntity) {
     if (entity.progress_status !== EProgressStatus.ProgressPending) {
-      console.warn(
-        `Progress ${entityName} does not have pending status. Status: ${entity.progress_status}`,
-      )
+      if (import.meta.env.DEV) {
+        console.warn(
+          `Progress ${entityName} does not have pending status. Status: ${entity.progress_status}`,
+        )
+      }
       return
     }
 
-    if (progresses.value.find((p) => p.entityName === entityName && p.entity.id === entity.id)) {
-      console.warn(`Progress for ${entityName}.${entity.id} already registered`)
-      return
-    }
+    let source = progresses.value.find(
+      (p) => p.value.entityName === entityName && p.value.entity.id === entity.id,
+    )
+    if (source) return computed(() => source?.value)
 
-    const source: TProgressSource = {
+    source = ref({
       entityName,
       entity,
-      eventSource: api.eventSource(`${entityName}/${entity.id}`),
+      eventSource: api.eventSource(`progress/${entityName}/${entity.id}`),
       details: {},
-      value: 0,
-    }
+      progressValue: 0,
+    })
 
-    source.eventSource.addEventListener('error', () => {
+    source.value.eventSource.addEventListener('error', () => {
       stopListenProgress(entityName, entity)
     })
 
-    source.eventSource.addEventListener('message', (event) => {
+    source.value.eventSource.addEventListener('message', (event) => {
       const data = JSON.parse(event.data)
-      source.value = data.value
-      source.details = data.details
+      source.value.progressValue = data.value
+      source.value.details = data.details
+      console.log(data, source.value)
     })
 
     progresses.value.push(source)
 
-    return source
+    return computed(() => source?.value)
   }
 
   function stopListenProgress(entityName: EProgressEntityName, entity: IProgressEntity) {
     progresses.value = progresses.value.filter((p) => {
-      if (p.entityName === entityName && p.entity.id === entity.id) {
-        p.eventSource.close()
-        return false
+      if (p.value.entityName === entityName && p.value.entity.id === entity.id) {
+        p.value.eventSource.close()
+        p.value.progressValue = undefined
+        return true
       }
       return true
     })
   }
-
-  function getProgress() {}
 
   return {
     progresses,

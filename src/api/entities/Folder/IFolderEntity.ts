@@ -1,5 +1,6 @@
 import type { IImageEntity } from '@/api/entities/Image/IImageEntity'
 import type { EStorage } from '@/enums/EStorage'
+import type { EProgressStatus } from '@/interfaces/Progress/IProgress'
 
 export interface IFolderEntity {
   id: number
@@ -10,6 +11,7 @@ export interface IFolderEntity {
   nested?: IFolderEntity[]
   images?: IImageEntity[]
   storage: EStorage
+  progress_status: EProgressStatus
   created_at: string
   updated_at: string
 }

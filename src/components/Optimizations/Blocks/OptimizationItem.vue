@@ -7,7 +7,7 @@
       {{ optimization.title }}
     </span>
     <span v-if="progressShown" class="progress">
-      <!-- {{ currentProgress }}% -->
+      {{ currentProgress }}%
       <SpinnerLoader />
     </span>
   </button>
@@ -21,6 +21,8 @@ import { useApi } from '@/composables/useApi'
 import { useNotifications } from '@/composables/useNotifications'
 import { supportedExtensions } from '@/interfaces/_General/EExtensions'
 import { computed } from 'vue'
+import { useProgress } from '@/composables/useProgress'
+import { EProgressEntityName } from '@/interfaces/Progress/IProgress'
 
 const props = defineProps<{
   optimization: IOptimizationEntity
@@ -34,10 +36,13 @@ const extensionIcons = computed(() => {
   return props.optimization.extensions.split('|').map((ext) => supportedExtensions[ext]?.icon)
 })
 
-// const progressShown = computed(
-//   () => typeof currentProgress.value != 'undefined' && currentProgress.value < 100,
-// )
-const progressShown = computed(() => false)
+const { source } = useProgress(EProgressEntityName.Optimizations, props.optimization)
+
+const currentProgress = computed(() => source?.value?.progressValue)
+
+const progressShown = computed(
+  () => typeof currentProgress.value != 'undefined' && currentProgress.value < 100,
+)
 
 async function downloadZip() {
   if (progressShown.value) return

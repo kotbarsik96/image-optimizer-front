@@ -26,6 +26,6 @@ export type TProgressSource = {
   entityName: EProgressEntityName
   entity: IProgressEntity
   eventSource: EventSource
-  value: number
+  progressValue: number | undefined
   details: TProgressDetails
 }
