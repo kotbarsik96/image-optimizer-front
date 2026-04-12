@@ -14,7 +14,7 @@ export const useProgressStore = defineStore('progress', () => {
   const progresses = shallowRef<Ref<TProgressSource>[]>([])
 
   /** зарегистрировать слушатель SSE, если статус === ProgressPending. Если уже зарегистрирован - просто вернёт существующий */
-  function startListenProgress(entityName: EProgressEntityName, entity: IProgressEntity) {
+  function getOrStartListeningProgress(entityName: EProgressEntityName, entity: IProgressEntity) {
     if (entity.progress_status !== EProgressStatus.ProgressPending) {
       if (import.meta.env.DEV) {
         console.warn(
@@ -27,7 +27,7 @@ export const useProgressStore = defineStore('progress', () => {
     let source = progresses.value.find(
       (p) => p.value.entityName === entityName && p.value.entity.id === entity.id,
     )
-    if (source) return computed(() => source?.value)
+    if (source) return source
 
     source = ref({
       entityName,
@@ -49,7 +49,7 @@ export const useProgressStore = defineStore('progress', () => {
 
     progresses.value.push(source)
 
-    return computed(() => source?.value)
+    return source
   }
 
   function stopListenProgress(entityName: EProgressEntityName, entity: IProgressEntity) {
@@ -65,7 +65,7 @@ export const useProgressStore = defineStore('progress', () => {
 
   return {
     progresses,
-    startListenProgress,
+    getOrStartListeningProgress,
     stopListenProgress,
   }
 })

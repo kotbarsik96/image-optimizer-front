@@ -5,17 +5,23 @@ import {
   type TProgressSource,
 } from '@/interfaces/Progress/IProgress'
 import { useProgressStore } from '@/stores/progressStore'
-import { type ComputedRef } from 'vue'
+import { computed, toValue, type ComputedRef, type MaybeRefOrGetter, type Ref } from 'vue'
 
-export function useProgress(entityName: EProgressEntityName, entity: IProgressEntity) {
+export function useProgress(
+  entityName: EProgressEntityName,
+  entity: MaybeRefOrGetter<IProgressEntity>,
+) {
   const store = useProgressStore()
-  const { startListenProgress } = store
+  const { getOrStartListeningProgress } = store
 
-  let source: ComputedRef<TProgressSource | undefined> | undefined
-
-  if (entity.progress_status == EProgressStatus.ProgressPending) {
-    source = startListenProgress(entityName, entity)
-  }
+  const source = computed(() => {
+    let s: Ref<TProgressSource> | undefined
+    const e = toValue(entity)
+    if (e.progress_status === EProgressStatus.ProgressPending) {
+      s = getOrStartListeningProgress(entityName, e)
+    }
+    return s?.value
+  })
 
   return {
     source,
