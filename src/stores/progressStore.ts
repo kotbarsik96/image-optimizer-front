@@ -45,7 +45,6 @@ export const useProgressStore = defineStore('progress', () => {
       const data = JSON.parse(event.data)
       source.value.progressValue = data.value
       source.value.details = data.details
-      console.log(data, source.value)
     })
 
     progresses.value.push(source)
