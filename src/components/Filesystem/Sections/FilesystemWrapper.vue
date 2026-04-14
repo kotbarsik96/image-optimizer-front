@@ -26,6 +26,12 @@
         :routeName="routeName"
       />
       <FsImage v-for="image in folder.images" :key="image.id" :image="image" />
+      <FsImage
+        v-for="image in uploadingImages"
+        :key="image.key"
+        :image="image"
+        :upload-details="source?.details[image.filename]"
+      />
     </div>
 
     <div v-else-if="isPending" class="contents">
@@ -47,8 +53,8 @@ import IconChevronDown from '@/assets/icons/chevron-down.svg'
 import FsFolder from '@/components/Filesystem/Blocks/FsFolder.vue'
 import FsImage from '@/components/Filesystem/Blocks/FsImage.vue'
 import { useRoute } from 'vue-router'
-import { computed, ref, toValue } from 'vue'
-import { useQuery } from '@tanstack/vue-query'
+import { computed, toValue } from 'vue'
+import { useQuery, useQueryClient } from '@tanstack/vue-query'
 import { useApi } from '@/composables/useApi'
 import { EQueryKeys } from '@/api/interfaces/EQueryKeys'
 import type { IResponseWrapper } from '@/api/interfaces/IResponseWrapper'
@@ -56,7 +62,9 @@ import SkeletonItem from '@/components/_UI/SkeletonItem.vue'
 import SpinnerLoader from '@/components/_UI/SpinnerLoader.vue'
 import FsUpload from '@/components/Filesystem/Blocks/FsUpload.vue'
 import FsNewFolderBtn from '@/components/Filesystem/Blocks/FsNewFolderBtn.vue'
-import ButtonGeneral from '@/components/_UI/buttons/ButtonGeneral.vue'
+import { EProgressEntityName } from '@/interfaces/Progress/IProgress'
+import type { IImageEntity } from '@/api/entities/Image/IImageEntity'
+import { useProgress } from '@/composables/useProgress'
 
 const props = defineProps<{
   rootFolderId?: number
@@ -64,6 +72,7 @@ const props = defineProps<{
 }>()
 
 const api = useApi()
+const queryClient = useQueryClient()
 
 const route = useRoute()
 const routeName = computed(() => route.name as string)
@@ -105,6 +114,22 @@ const isPending = computed(() => {
 })
 
 const folder = computed(() => data.value?.data)
+
+const { source } = useProgress(EProgressEntityName.Uploads, folder, () => {
+  queryClient.invalidateQueries({
+    queryKey: [EQueryKeys.Folder, currentFolderId.value],
+  })
+})
+
+const uploadingImages = computed(() =>
+  Object.values(source.value?.details ?? {})
+    .filter((detail) => {
+      const img = detail.meta.image as IImageEntity
+      if (detail.done && folder.value?.images?.find((i) => i.id === img.id)) return false
+      return true
+    })
+    .map((detail) => detail.meta.image as IImageEntity),
+)
 
 const path = computed(() => (folder.value?.path == '.' ? '/' : (folder.value?.path ?? '')))
 

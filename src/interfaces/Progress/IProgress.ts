@@ -22,10 +22,17 @@ export type TProgressDetailItem = {
   meta: Record<string, any>
 }
 
-export type TProgressSource = {
-  entityName: EProgressEntityName
-  entity: IProgressEntity
-  eventSource: EventSource
-  progressValue: number | undefined
+export interface IProgressData {
+  entity_id: number
+  progress_value: number
   details: TProgressDetails
+  done: boolean
+}
+
+export interface IProgressDataSource extends IProgressData {
+  entity_name: EProgressEntityName
+}
+
+export interface IProgressCloseEvent {
+  close_event: boolean
 }

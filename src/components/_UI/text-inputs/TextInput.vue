@@ -1,14 +1,16 @@
 <template>
-  <input :type="type" v-model="model" />
+  <input :type="type" v-model="model" :autocomplete="autocomplete" />
 </template>
 
 <script setup lang="ts">
 const props = withDefaults(
   defineProps<{
     type?: 'text' | 'email'
+    autocomplete?: string
   }>(),
   {
     type: 'text',
+    autocomplete: 'off',
   },
 )
 

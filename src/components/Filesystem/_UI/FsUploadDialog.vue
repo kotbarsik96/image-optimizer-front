@@ -25,12 +25,16 @@ import { useUploadMutation } from '@/composables/useUpload'
 import { watch } from 'vue'
 import { useDroppedFilesStore } from '@/stores/droppedFilesStore'
 import { storeToRefs } from 'pinia'
+import { useQueryClient } from '@tanstack/vue-query'
+import { EQueryKeys } from '@/api/interfaces/EQueryKeys'
 
 const model = defineModel<boolean>()
 
 const props = defineProps<{
   folderId: number
 }>()
+
+const queryClient = useQueryClient()
 
 const store = useDroppedFilesStore()
 const { folderImageFiles } = storeToRefs(store)
@@ -48,6 +52,9 @@ async function upload() {
   if (folderImageFiles.value.length) {
     mutate(folderImageFiles.value, {
       onSuccess() {
+        queryClient.invalidateQueries({
+          queryKey: [EQueryKeys.Folder, props.folderId],
+        })
         hideDialog()
       },
     })

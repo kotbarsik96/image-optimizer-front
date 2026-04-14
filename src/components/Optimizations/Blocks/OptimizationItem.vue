@@ -38,11 +38,9 @@ const extensionIcons = computed(() => {
 
 const { source } = useProgress(EProgressEntityName.Optimizations, props.optimization)
 
-const currentProgress = computed(() => source?.value?.progressValue)
+const currentProgress = computed(() => source?.value?.progress_value)
 
-const progressShown = computed(
-  () => typeof currentProgress.value != 'undefined' && currentProgress.value < 100,
-)
+const progressShown = computed(() => typeof currentProgress.value !== 'undefined')
 
 async function downloadZip() {
   if (progressShown.value) return

@@ -3,6 +3,7 @@
     inputmode="decimal"
     type="text"
     :value="shownValue"
+    autocomplete="off"
     @focus="onFocus"
     @blur="onBlur"
     @input="onInteraction"

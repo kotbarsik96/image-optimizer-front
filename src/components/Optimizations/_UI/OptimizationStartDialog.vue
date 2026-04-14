@@ -73,7 +73,7 @@ const extensions = ref<Array<string>>([])
 const sizes = ref([])
 
 const progressesStore = useProgressStore()
-const { startListenProgress } = progressesStore
+const { newEventSourceListener } = progressesStore
 
 const error = ref('')
 watch(title, () => (error.value = ''))
@@ -99,7 +99,7 @@ const { mutate, isPending } = useMutation({
       queryClient.invalidateQueries({
         queryKey: [EQueryKeys.OptimizationsList],
       })
-      if (data.data?.id) startListenProgress(EProgressEntityName.Optimizations, data.data)
+      if (data.data?.id) newEventSourceListener(EProgressEntityName.Optimizations)
     } else {
       if (data.error) error.value = data.error
     }

@@ -66,10 +66,6 @@ export class Api {
       withCredentials: true,
     })
 
-    eventSource.addEventListener('error', () => {
-      eventSource.close()
-    })
-
     return eventSource
   }
 }

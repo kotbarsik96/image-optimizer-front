@@ -1,71 +1,85 @@
 import { useApi } from '@/composables/useApi'
-import {
-  EProgressStatus,
-  type EProgressEntityName,
-  type IProgressEntity,
-  type TProgressSource,
+import type {
+  EProgressEntityName,
+  IProgressData,
+  IProgressDataSource,
 } from '@/interfaces/Progress/IProgress'
+import { SSE_STREAM_CLOSED } from '@/interfaces/SSE/ISSE'
 import { defineStore } from 'pinia'
-import { computed, ref, shallowRef, type Ref } from 'vue'
+import { ref, shallowRef, type Ref } from 'vue'
 
 export const useProgressStore = defineStore('progress', () => {
+  const eventSources = new Map<EProgressEntityName, EventSource>()
+  const progressSources = shallowRef<Ref<IProgressDataSource>[]>([])
   const api = useApi()
 
-  const progresses = shallowRef<Ref<TProgressSource>[]>([])
+  function newEventSource(name: EProgressEntityName) {
+    const es = api.eventSource(`progress/${name}`)
+    eventSources.set(name, es)
 
-  /** зарегистрировать слушатель SSE, если статус === ProgressPending. Если уже зарегистрирован - просто вернёт существующий */
-  function getOrStartListeningProgress(entityName: EProgressEntityName, entity: IProgressEntity) {
-    if (entity.progress_status !== EProgressStatus.ProgressPending) {
-      if (import.meta.env.DEV) {
-        console.warn(
-          `Progress ${entityName} does not have pending status. Status: ${entity.progress_status}`,
-        )
+    es.addEventListener('error', () => {
+      es.close()
+      eventSources.delete(name)
+      console.warn(`Ошибка при отслеживании прогресса ${name}`)
+    })
+    es.addEventListener('message', (event: MessageEvent) => {
+      if (event.data === SSE_STREAM_CLOSED) {
+        es.close()
+        eventSources.delete(name)
+        return
       }
-      return
-    }
 
-    let source = progresses.value.find(
-      (p) => p.value.entityName === entityName && p.value.entity.id === entity.id,
-    )
-    if (source) return source
+      const data = JSON.parse(event.data) as IProgressData
 
-    source = ref({
-      entityName,
-      entity,
-      eventSource: api.eventSource(`progress/${entityName}/${entity.id}`),
-      details: {},
-      progressValue: 0,
+      let ps = progressSources.value.find(
+        (s) => s.value.entity_name === name && s.value.entity_id === data.entity_id,
+      )
+      if (!ps) {
+        ps = ref({
+          entity_id: data.entity_id,
+          entity_name: name,
+          progress_value: data.progress_value,
+          details: data.details,
+          done: data.done,
+        })
+        progressSources.value = [...progressSources.value, ps]
+      }
+
+      ps.value.progress_value = data.progress_value
+      ps.value.details = data.details
+      ps.value.done = true
+
+      if (data.done) {
+        progressSources.value = progressSources.value.filter((v) => {
+          if (v.value.entity_name === name && v.value.entity_id === data.entity_id) return false
+          return true
+        })
+      }
     })
 
-    source.value.eventSource.addEventListener('error', () => {
-      stopListenProgress(entityName, entity)
-    })
-
-    source.value.eventSource.addEventListener('message', (event) => {
-      const data = JSON.parse(event.data)
-      source.value.progressValue = data.value
-      source.value.details = data.details
-    })
-
-    progresses.value.push(source)
-
-    return source
+    return es
   }
 
-  function stopListenProgress(entityName: EProgressEntityName, entity: IProgressEntity) {
-    progresses.value = progresses.value.filter((p) => {
-      if (p.value.entityName === entityName && p.value.entity.id === entity.id) {
-        p.value.eventSource.close()
-        p.value.progressValue = undefined
-        return true
-      }
-      return true
-    })
+  function newEventSourceListener(
+    name: EProgressEntityName,
+    onMessage?: (event: MessageEvent) => void,
+  ) {
+    let es = eventSources.get(name)
+    if (!es) es = newEventSource(name)
+    if (onMessage) es.addEventListener('message', onMessage)
+  }
+
+  function removeEventSourceListener(
+    name: EProgressEntityName,
+    onMessage: (event: MessageEvent) => void,
+  ) {
+    const es = eventSources.get(name)
+    es?.removeEventListener('message', onMessage)
   }
 
   return {
-    progresses,
-    getOrStartListeningProgress,
-    stopListenProgress,
+    progressSources,
+    newEventSourceListener,
+    removeEventSourceListener,
   }
 })

@@ -19,6 +19,22 @@
     object-fit: contain;
   }
 
+  .loader-wrap {
+    width: 100px;
+    height: auto;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .loader {
+      --spinner-color: var(--primary-1);
+      width: 50px;
+      aspect-ratio: 1;
+      height: auto;
+    }
+  }
+
   .title {
     text-align: center;
     overflow-wrap: break-word;
